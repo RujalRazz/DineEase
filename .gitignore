@@ -1,0 +1,28 @@
+# ── Compiled Java classes ──
+*.class
+*.jar
+*.war
+*.ear
+
+# ── Eclipse project files ──
+.classpath
+.project
+.settings/
+.metadata/
+
+# ── Build output ──
+build/
+target/
+bin/
+
+# ── Dependency JARs (never commit these) ──
+WebContent/WEB-INF/lib/*.jar
+src/main/webapp/WEB-INF/lib/*.jar
+
+# ── OS files ──
+.DS_Store
+Thumbs.db
+
+# ── Logs ──
+*.log
+logs/
