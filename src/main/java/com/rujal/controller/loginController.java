@@ -40,7 +40,7 @@ public class loginController extends HttpServlet {
      */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		request.getRequestDispatcher("WEB-INF/pages/login.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
 		
 	}
 
@@ -64,7 +64,7 @@ public class loginController extends HttpServlet {
             session.setAttribute("user", user);
             
             session.setMaxInactiveInterval(1800);
-            response.sendRedirect(request.getContextPath() + "/index.jsp");
+            response.sendRedirect(request.getContextPath() + "/index");
         }
         else {
       

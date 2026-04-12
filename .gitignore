@@ -15,7 +15,7 @@ build/
 target/
 bin/
 
-# ── Dependency JARs (never commit these) ──
+# ── Dependency JARs 
 WebContent/WEB-INF/lib/*.jar
 src/main/webapp/WEB-INF/lib/*.jar
 

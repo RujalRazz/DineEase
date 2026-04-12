@@ -138,20 +138,8 @@ row {
 }
 </style>
 <body>
-	<nav>
-		<a href="${pageContext.request.contextPath}/index.jsp"
-			class="nav-brand"> <img
-			src="${pageContext.request.contextPath}/assets/logo.png"
-			alt="DineEase Logo">
-		</a>
-		<ul class="nav-links">
-			<li><a href="${pageContext.request.contextPath}/index">Home</a></li>
-			<li><a href="${pageContext.request.contextPath}/login">Login</a></li>
-			<li><a href="${pageContext.request.contextPath}/register"
-				class="active">Register</a></li>
-		</ul>
-		<a href="#" class="nav-cart">&#128722;</a>
-	</nav>
+<% request.setAttribute("activePage", "register"); %>
+	<jsp:include page="/WEB-INF/components/navbar.jsp" />
 	<div class="page-body">
     <div class="card">
 
@@ -221,18 +209,7 @@ row {
 
     </div>
 </div>
-	<footer>
-    <div>
-        <div class="footer-brand">DineEase</div>
-        <div class="footer-copy">© 2024 DineEase Editorial Hospitality. All rights reserved.</div>
-    </div>
-    <ul class="footer-links">
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Terms of Service</a></li>
-        <li><a href="#">Contact Us</a></li>
-        <li><a href="#">Partner With Us</a></li>
-    </ul>
-</footer>
+	<jsp:include page="/WEB-INF/components/footer.jsp"/>
 	
 
 </body>
