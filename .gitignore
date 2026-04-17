@@ -9,6 +9,12 @@
 .project
 .settings/
 .metadata/
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
 
 # ── Build output ──
 build/
@@ -26,3 +32,4 @@ Thumbs.db
 # ── Logs ──
 *.log
 logs/
+

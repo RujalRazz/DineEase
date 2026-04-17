@@ -430,11 +430,19 @@
 				<span class="pin-icon">&#128205;</span> <select id="citySelect">
 					<option value="">Select your city</option>
 					<option value="all">All</option>
-					<option value="kathmandu">Kathmandu</option>
-					<option value="pokhara">Pokhara</option>
-					<option value="lalitpur">Lalitpur</option>
-					<option value="bhaktapur">Bhaktapur</option>
-					<option value="biratnagar">Biratnagar</option>
+					<% 
+						List<com.rujal.model.City> cities = (List<com.rujal.model.City>) request.getAttribute("cities");
+					if (cities != null) {
+			            for (City city : cities) {
+					%>
+					<option value="<%=city.getCityId()%>">
+            <%=city.getCityName()%>
+        </option>
+        <%
+			            }
+					}
+        %>
+					
 				</select>
 				<button class="find-btn" onclick="handleFindRestaurants()">Find
 					Restaurants</button>
@@ -495,8 +503,6 @@
 		const contextPath = '${pageContext.request.contextPath}';
 		const CITIES = [
 	        <%
-	            List<com.rujal.model.City> cities =
-	                (List<com.rujal.model.City>) request.getAttribute("cities");
 	            if (cities != null) {
 	                for (int i = 0; i < cities.size(); i++) {
 	                    com.rujal.model.City city = cities.get(i);

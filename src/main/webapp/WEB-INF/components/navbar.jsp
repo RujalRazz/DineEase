@@ -19,7 +19,7 @@ Object loggedInUser = session.getAttribute("user");
 		%>
 		<%-- Logged in — show these links --%>
 		<li><a href="${pageContext.request.contextPath}/restaurants"
-			class="${activePage == 'profile' ? 'active' : ''}">Restaurants</a></li>
+			class="${activePage == 'restaurants' ? 'active' : ''}">Restaurants</a></li>
 		<li><a href="${pageContext.request.contextPath}/about-us"
 			class="${activePage == 'bookings' ? 'active' : ''}">About Us</a></li>
 		<li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>

@@ -69,7 +69,7 @@ public class loginController extends HttpServlet {
         else {
       
             request.setAttribute("errorMessage", "Invalid email or password. Please try again.");
-            request.getRequestDispatcher("WEB-INF/pages/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/pages/login.jsp").forward(request, response);
         }
 	}
 

@@ -159,11 +159,11 @@ row {
             <div class="row">
                 <div class="form-group">
                     <label for="first_name">First Name</label>
-                    <input type="text" id="first_name" name="first_name" placeholder="E.g. Julian" required />
+                    <input type="text" id="first_name" name="first_name" placeholder="E.g. Rujal" required />
                 </div>
                 <div class="form-group">
                     <label for="last_name">Last Name</label>
-                    <input type="text" id="last_name" name="last_name" placeholder="E.g. Mercier" required />
+                    <input type="text" id="last_name" name="last_name" placeholder="E.g. Sharma" required />
                 </div>
             </div>
 
@@ -171,7 +171,7 @@ row {
             <div class="form-group">
                 <label for="address">Residential Address</label>
                 <div class="input-wrap">
-                    <input type="text" id="address" name="address" placeholder="Street, City, Postcode" required />
+                    <input type="text" id="address" name="address" placeholder="eg: Patan, Lalitpur" required />
                 </div>
             </div>
 
@@ -179,11 +179,11 @@ row {
             <div class="row">
                 <div class="form-group">
                     <label for="phone_number">Phone Number</label>
-                    <input type="tel" id="phone_number" name="phone_number" placeholder="+977 98XXXXXXXX" required />
+                    <input type="tel" id="phone_number" name="phone_number" placeholder="98XXXXXXXX" required />
                 </div>
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="name@editorial.com" required />
+                    <input type="email" id="email" name="email" placeholder="name@gmail.com" required />
                 </div>
             </div>
 
