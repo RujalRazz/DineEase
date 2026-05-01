@@ -26,8 +26,9 @@
 			<div class="price-dot rc-dot-3"></div>
 		</div>
 		<div class="card-btns">
-			<a href="#" class="btn-outline rc-menu">View Menu</a> <a href="#"
-				class="btn-solid rc-book">Book Table</a>
+
+			<a href="#" class="btn-outline">View Menu</a> <a href="#"
+				class="btn-solid">Book Table</a>
 		</div>
 	</div>
 </div>

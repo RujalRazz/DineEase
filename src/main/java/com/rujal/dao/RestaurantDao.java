@@ -92,111 +92,118 @@ public class RestaurantDao {
 		}
 		return 0;
 	}
+
 	/**
-	 * Fetches the 5 most recently added restaurants.
-	 * Used by AdminDashboardController for the dashboard table.
+	 * Fetches the 5 most recently added restaurants. Used by
+	 * AdminDashboardController for the dashboard table.
 	 */
 	public List<Restaurant> getRecentRestaurants() {
-	    List<Restaurant> list = new ArrayList<>();
-	    String sql = "SELECT * FROM restaurants ORDER BY restaurant_id DESC LIMIT 5";
+		List<Restaurant> list = new ArrayList<>();
+		String sql = "SELECT * FROM restaurants ORDER BY restaurant_id DESC LIMIT 5";
 
-	    try (
-	        Connection conn = DBconfig.getConnection();
-	        PreparedStatement ps = conn.prepareStatement(sql);
-	        ResultSet rs = ps.executeQuery()
-	    ) {
-	        while (rs.next()) {
-	            list.add(mapResultSet(rs));
-	        }
-	    } catch (SQLException e) {
-	        System.err.println("[RestaurantDAO] getRecentRestaurants failed: " + e.getMessage());
-	    }
-	    return list;
+		try (Connection conn = DBconfig.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				list.add(mapResultSet(rs));
+			}
+		} catch (SQLException e) {
+			System.err.println("[RestaurantDAO] getRecentRestaurants failed: " + e.getMessage());
+		}
+		return list;
 	}
+
 	public List<Restaurant> getAllRestaurants() {
-	    return getRestaurants(0, null);
+		return getRestaurants(0, null);
 	}
 
 	/**
-	 * Inserts a new restaurant into the database.
-	 * Returns true if insert was successful.
+	 * Inserts a new restaurant into the database. Returns true if insert was
+	 * successful.
 	 */
 	public boolean addRestaurant(Restaurant r) {
-	    String sql = "INSERT INTO restaurants " +
-	                 "(city_id, name, address, contact, description, " +
-	                 "image_url, rating, price_range, badge) " +
-	                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO restaurants " + "(city_id, name, address, contact, description, "
+				+ "image_url, rating, price_range, badge) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-	    try (
-	        Connection conn = DBconfig.getConnection();
-	        PreparedStatement ps = conn.prepareStatement(sql)
-	    ) {
-	        ps.setInt(1, r.getCityId());
-	        ps.setString(2, r.getName());
-	        ps.setString(3, r.getAddress());
-	        ps.setString(4, r.getContact());
-	        ps.setString(5, r.getDescription());
-	        ps.setString(6, r.getImageUrl());
-	        ps.setDouble(7, r.getRating());
-	        ps.setInt(8, r.getPriceRange());
-	        ps.setString(9, r.getBadge());
+		try (Connection conn = DBconfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setInt(1, r.getCityId());
+			ps.setString(2, r.getName());
+			ps.setString(3, r.getAddress());
+			ps.setString(4, r.getContact());
+			ps.setString(5, r.getDescription());
+			ps.setString(6, r.getImageUrl());
+			ps.setDouble(7, r.getRating());
+			ps.setInt(8, r.getPriceRange());
+			ps.setString(9, r.getBadge());
 
-	        return ps.executeUpdate() > 0;
+			return ps.executeUpdate() > 0;
 
-	    } catch (SQLException e) {
-	        System.err.println("[RestaurantDAO] addRestaurant failed: " + e.getMessage());
-	        return false;
-	    }
+		} catch (SQLException e) {
+			System.err.println("[RestaurantDAO] addRestaurant failed: " + e.getMessage());
+			return false;
+		}
 	}
+
 	/**
-	 * Updates an existing restaurant in the database.
-	 * Returns true if update was successful.
+	 * Updates an existing restaurant in the database. Returns true if update was
+	 * successful.
 	 */
 	public boolean updateRestaurant(Restaurant r) {
-	    String sql = "UPDATE restaurants SET " +
-	                 "city_id=?, name=?, address=?, contact=?, description=?, " +
-	                 "image_url=?, rating=?, price_range=?, badge=? " +
-	                 "WHERE restaurant_id=?";
+		String sql = "UPDATE restaurants SET " + "city_id=?, name=?, address=?, contact=?, description=?, "
+				+ "image_url=?, rating=?, price_range=?, badge=? " + "WHERE restaurant_id=?";
 
-	    try (
-	        Connection conn = DBconfig.getConnection();
-	        PreparedStatement ps = conn.prepareStatement(sql)
-	    ) {
-	        ps.setInt(1, r.getCityId());
-	        ps.setString(2, r.getName());
-	        ps.setString(3, r.getAddress());
-	        ps.setString(4, r.getContact());
-	        ps.setString(5, r.getDescription());
-	        ps.setString(6, r.getImageUrl());
-	        ps.setDouble(7, r.getRating());
-	        ps.setInt(8, r.getPriceRange());
-	        ps.setString(9, r.getBadge());
-	        ps.setInt(10, r.getRestaurantId());
+		try (Connection conn = DBconfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setInt(1, r.getCityId());
+			ps.setString(2, r.getName());
+			ps.setString(3, r.getAddress());
+			ps.setString(4, r.getContact());
+			ps.setString(5, r.getDescription());
+			ps.setString(6, r.getImageUrl());
+			ps.setDouble(7, r.getRating());
+			ps.setInt(8, r.getPriceRange());
+			ps.setString(9, r.getBadge());
+			ps.setInt(10, r.getRestaurantId());
 
-	        return ps.executeUpdate() > 0;
+			return ps.executeUpdate() > 0;
 
-	    } catch (SQLException e) {
-	        System.err.println("[RestaurantDAO] updateRestaurant failed: " + e.getMessage());
-	        return false;
-	    }
+		} catch (SQLException e) {
+			System.err.println("[RestaurantDAO] updateRestaurant failed: " + e.getMessage());
+			return false;
+		}
 	}
+
 	/**
-	 * Deletes a restaurant from the database by ID.
-	 * Returns true if delete was successful.
+	 * Deletes a restaurant from the database by ID. Returns true if delete was
+	 * successful.
 	 */
 	public boolean deleteRestaurant(int restaurantId) {
-	    String sql = "DELETE FROM restaurants WHERE restaurant_id = ?";
+		String sql = "DELETE FROM restaurants WHERE restaurant_id = ?";
 
-	    try (
-	        Connection conn = DBconfig.getConnection();
-	        PreparedStatement ps = conn.prepareStatement(sql)
-	    ) {
-	        ps.setInt(1, restaurantId);
-	        return ps.executeUpdate() > 0;
+		try (Connection conn = DBconfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setInt(1, restaurantId);
+			return ps.executeUpdate() > 0;
 
-	    } catch (SQLException e) {
-	        System.err.println("[RestaurantDAO] deleteRestaurant failed: " + e.getMessage());
-	        return false;
-	    }
+		} catch (SQLException e) {
+			System.err.println("[RestaurantDAO] deleteRestaurant failed: " + e.getMessage());
+			return false;
+		}
+	}
+
+	/**
+	 * Fetches a single restaurant by its ID.
+	 */
+	public Restaurant getRestaurantById(int restaurantId) {
+		String sql = "SELECT * FROM restaurants WHERE restaurant_id = ?";
+
+		try (Connection conn = DBconfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setInt(1, restaurantId);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next())
+					return mapResultSet(rs);
+			}
+		} catch (SQLException e) {
+			System.err.println("[RestaurantDAO] getRestaurantById failed: " + e.getMessage());
+		}
+		return null;
 	}
 }

@@ -61,7 +61,6 @@
 
     </nav>
 
-    <div class="sidebar-nav-label" style="margin-top: auto;">ACCOUNT</div>
     <a href="${pageContext.request.contextPath}/adminLogout"
        class="sidebar-nav-item sidebar-logout">
         <span class="nav-icon">&#128682;</span>

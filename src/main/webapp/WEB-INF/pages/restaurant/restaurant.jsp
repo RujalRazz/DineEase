@@ -273,8 +273,6 @@
 	font-size: 48px;
 	margin-bottom: 16px;
 }
-
-
 </style>
 </head>
 <body>
@@ -353,7 +351,7 @@
 	<div class="restaurant-section">
 		<div class="restaurant-grid" id="restaurantGrid"></div>
 	</div>
-	
+
 
 	<jsp:include page="/WEB-INF/components/footer.jsp" />
 
@@ -415,11 +413,9 @@
 	            if (r.priceRange >= 2) card.querySelector('.rc-dot-2').classList.add('filled');
 	            if (r.priceRange >= 3) card.querySelector('.rc-dot-3').classList.add('filled');
 
-	            card.querySelector('.rc-book').href =
-	                contextPath + '/booking?restaurantId=' + r.name;
-
-	            
-	            card.querySelector('.rc-menu').href = '#';
+	        
+	            card.querySelector('.btn-solid').href = contextPath + '/booking?restaurantId=' + r.id;
+	            card.querySelector('.btn-outline').href = contextPath + '/menu?restaurantId=' + r.id;
 
 	            grid.appendChild(card);
 	        });
