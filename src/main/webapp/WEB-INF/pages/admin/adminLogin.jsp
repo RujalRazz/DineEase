@@ -242,14 +242,7 @@ body {
 				Access restricted to authorized personnel only.<br> All
 				activity is monitored and logged.
 			</p>
-			<div class="security-badges">
-				<div class="security-badge">
-					<span>&#128737;</span> TLS 1.3
-				</div>
-				<div class="security-badge">
-					<span>&#128737;</span> V2.4.0
-				</div>
-			</div>
+	
 		</div>
 
 	</div>

@@ -1,12 +1,15 @@
 package com.rujal.dao;
 
 import com.rujal.model.User;
+import java.util.List;
 import com.rujal.config.DBconfig;
  
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 // Class userDao
@@ -87,6 +90,7 @@ public class UserDao {
  
         return null; // user not found
     }
+	
 	 private User mapResultSetToUser(ResultSet rs) throws SQLException {
 	        User user = new User();
 	        user.setUser_id(rs.getInt("user_id"));
@@ -98,4 +102,51 @@ public class UserDao {
 	        user.setAddress(rs.getString("address"));
 	        return user;
 	    }
+	 /**
+	  * Counts the total number of users in the database.
+	  * Used by AdminDashboardController to display stats.
+	  */
+	 public int countUsers() {
+	     String sql = "SELECT COUNT(*) FROM users";
+	     try (
+	         Connection conn = DBconfig.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()
+	     ) {
+	         if (rs.next()) {
+	             return rs.getInt(1);
+	         }
+	     } catch (SQLException e) {
+	         System.err.println("[UserDAO] countUsers failed: " + e.getMessage());
+	     }
+	     return 0;
+	 }
+	 /**
+	  * Fetches the 5 most recently registered users.
+	  * Used by AdminDashboardController for the dashboard table.
+	  */
+	 public List<User> getRecentUsers() {
+	     List<User> users = new ArrayList<>();
+	     String sql = "SELECT * FROM users ORDER BY user_id DESC LIMIT 5";
+
+	     try (
+	         Connection conn = DBconfig.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()
+	     ) {
+	         while (rs.next()) {
+	             User user = new User();
+	             user.setUser_id(rs.getInt("user_id"));
+	             user.setFirst_name(rs.getString("first_name"));
+	             user.setLast_name(rs.getString("last_name"));
+	             user.setEmail(rs.getString("email"));
+	             user.setPhone_number(rs.getString("phone_number"));
+	             users.add(user);
+	         }
+	     } catch (SQLException e) {
+	         System.err.println("[UserDAO] getRecentUsers failed: " + e.getMessage());
+	     }
+	     return users;
+	 }
 }
+
