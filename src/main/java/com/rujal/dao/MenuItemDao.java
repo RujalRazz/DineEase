@@ -71,4 +71,68 @@ public class MenuItemDao {
 
         return items;
     }
+    /**
+     * Inserts a new menu item into the database.
+     */
+    public boolean addMenuItem(MenuItem item) {
+        String sql = "INSERT INTO menu_items " +
+                     "(name, description, price, category, image_url, is_available) " +
+                     "VALUES (?, ?, ?, ?, ?, ?)";
+        try (
+            Connection conn = DBconfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setString(1, item.getName());
+            ps.setString(2, item.getDescription());
+            ps.setDouble(3, item.getPrice());
+            ps.setString(4, item.getCategory());
+            ps.setString(5, item.getImageUrl());
+            ps.setBoolean(6, item.isAvailable());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("[MenuItemDAO] addMenuItem failed: " + e.getMessage());
+            return false;
+        }
+    }
+    /**
+     * Updates an existing menu item.
+     */
+    public boolean updateMenuItem(MenuItem item) {
+        String sql = "UPDATE menu_items SET " +
+                     "name=?, description=?, price=?, category=?, " +
+                     "image_url=?, is_available=? " +
+                     "WHERE item_id=?";
+        try (
+            Connection conn = DBconfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setString(1, item.getName());
+            ps.setString(2, item.getDescription());
+            ps.setDouble(3, item.getPrice());
+            ps.setString(4, item.getCategory());
+            ps.setString(5, item.getImageUrl());
+            ps.setBoolean(6, item.isAvailable());
+            ps.setInt(7, item.getItemId());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("[MenuItemDAO] updateMenuItem failed: " + e.getMessage());
+            return false;
+        }
+    }
+    /**
+     * Deletes a menu item by ID.
+     */
+    public boolean deleteMenuItem(int itemId) {
+        String sql = "DELETE FROM menu_items WHERE item_id = ?";
+        try (
+            Connection conn = DBconfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setInt(1, itemId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("[MenuItemDAO] deleteMenuItem failed: " + e.getMessage());
+            return false;
+        }
+    }
 }

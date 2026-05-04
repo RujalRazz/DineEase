@@ -99,4 +99,109 @@ public class BookingDao {
         b.setStatus(rs.getString("status"));
         return b;
     }
+    /**
+     * Updates the status of a booking.
+     */
+    public boolean updateStatus(int bookingId, String status) {
+        String sql = "UPDATE bookings SET status = ? WHERE booking_id = ?";
+        try (
+            Connection conn = DBconfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setString(1, status);
+            ps.setInt(2, bookingId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("[BookingDAO] updateStatus failed: " + e.getMessage());
+            return false;
+        }
+    }
+    /**
+     * Deletes a booking by ID.
+     */
+    public boolean deleteBooking(int bookingId) {
+        String sql = "DELETE FROM bookings WHERE booking_id = ?";
+        try (
+            Connection conn = DBconfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setInt(1, bookingId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("[BookingDAO] deleteBooking failed: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Fetches all bookings with user name and restaurant name via JOIN.
+     */
+    public List<Object[]> getAllBookingsWithDetails() {
+        List<Object[]> list = new ArrayList<>();
+        String sql =
+            "SELECT b.booking_id, " +
+            "CONCAT(u.first_name, ' ', u.last_name) AS full_name, " +
+            "r.name AS restaurant_name, " +
+            "b.booking_date, b.booking_time, b.guest_count, b.status " +
+            "FROM bookings b " +
+            "JOIN users u ON b.user_id = u.user_id " +
+            "JOIN restaurants r ON b.restaurant_id = r.restaurant_id " +
+            "ORDER BY b.booking_id DESC";
+
+        try (
+            Connection conn = DBconfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
+        ) {
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getInt("booking_id"),
+                    rs.getString("full_name"),
+                    rs.getString("restaurant_name"),
+                    rs.getString("booking_date"),
+                    rs.getString("booking_time"),
+                    rs.getInt("guest_count"),
+                    rs.getString("status")
+                };
+                list.add(row);
+            }
+        } catch (SQLException e) {
+            System.err.println("[BookingDAO] getAllBookingsWithDetails failed: " + e.getMessage());
+        }
+        return list;
+    }
+    /**
+     * Counts total bookings in the database.
+     */
+    public int countBookings() {
+        String sql = "SELECT COUNT(*) FROM bookings";
+        try (
+            Connection conn = DBconfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
+        ) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("[BookingDAO] countBookings failed: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    /**
+     * Counts bookings created this week.
+     */
+    public int countBookingsThisWeek() {
+        String sql = "SELECT COUNT(*) FROM bookings " +
+                     "WHERE booking_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
+        try (
+            Connection conn = DBconfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
+        ) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("[BookingDAO] countBookingsThisWeek failed: " + e.getMessage());
+        }
+        return 0;
+    }
 }

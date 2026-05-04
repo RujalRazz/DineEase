@@ -206,4 +206,23 @@ public class RestaurantDao {
 		}
 		return null;
 	}
+	
+	/**
+	 * Counts restaurants added this month using created_at column.
+	 */
+	public int countRestaurantsThisMonth() {
+	    String sql = "SELECT COUNT(*) FROM restaurants " +
+	                 "WHERE MONTH(created_at) = MONTH(CURDATE()) " +
+	                 "AND YEAR(created_at) = YEAR(CURDATE())";
+	    try (
+	        Connection conn = DBconfig.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(sql);
+	        ResultSet rs = ps.executeQuery()
+	    ) {
+	        if (rs.next()) return rs.getInt(1);
+	    } catch (SQLException e) {
+	        System.err.println("[RestaurantDAO] countRestaurantsThisMonth failed: " + e.getMessage());
+	    }
+	    return 0;
+	}
 }

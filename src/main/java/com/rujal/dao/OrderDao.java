@@ -128,4 +128,127 @@ public class OrderDao {
         o.setStatus(rs.getString("status"));
         return o;
     }
+    /**
+     * Updates the status of an order.
+     */
+    public boolean updateStatus(int orderId, String status) {
+        String sql = "UPDATE orders SET status = ? WHERE order_id = ?";
+        try (
+            Connection conn = DBconfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setString(1, status);
+            ps.setInt(2, orderId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("[OrderDAO] updateStatus failed: " + e.getMessage());
+            return false;
+        }
+    }
+    /**
+     * Deletes an order and its order items by order ID.
+     */
+    public boolean deleteOrder(int orderId) {
+        Connection conn = null;
+        try {
+            conn = DBconfig.getConnection();
+            conn.setAutoCommit(false);
+
+          
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "DELETE FROM order_items WHERE order_id = ?")) {
+                ps.setInt(1, orderId);
+                ps.executeUpdate();
+            }
+
+         
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "DELETE FROM orders WHERE order_id = ?")) {
+                ps.setInt(1, orderId);
+                ps.executeUpdate();
+            }
+
+            conn.commit();
+            return true;
+
+        } catch (SQLException e) {
+            System.err.println("[OrderDAO] deleteOrder failed: " + e.getMessage());
+            try { if (conn != null) conn.rollback(); }
+            catch (SQLException ex) { ex.printStackTrace(); }
+            return false;
+        } finally {
+            try { if (conn != null) conn.close(); }
+            catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+    /**
+     * Fetches all orders with user name and restaurant name via JOIN.
+     */
+    public List<Object[]> getAllOrdersWithDetails() {
+        List<Object[]> list = new ArrayList<>();
+        String sql =
+            "SELECT o.order_id, " +
+            "CONCAT(u.first_name, ' ', u.last_name) AS full_name, " +
+            "r.name AS restaurant_name, " +
+            "o.order_date, o.total_amount, o.status " +
+            "FROM orders o " +
+            "JOIN users u ON o.user_id = u.user_id " +
+            "JOIN restaurants r ON o.restaurant_id = r.restaurant_id " +
+            "ORDER BY o.order_id DESC";
+
+        try (
+            Connection conn = DBconfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
+        ) {
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getInt("order_id"),
+                    rs.getString("full_name"),
+                    rs.getString("restaurant_name"),
+                    rs.getString("order_date"),
+                    rs.getDouble("total_amount"),
+                    rs.getString("status")
+                };
+                list.add(row);
+            }
+        } catch (SQLException e) {
+            System.err.println("[OrderDAO] getAllOrdersWithDetails failed: " + e.getMessage());
+        }
+        return list;
+    }
+    /**
+     * Counts total orders in the database.
+     */
+    public int countOrders() {
+        String sql = "SELECT COUNT(*) FROM orders";
+        try (
+            Connection conn = DBconfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
+        ) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("[OrderDAO] countOrders failed: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    /**
+     * Counts orders placed today.
+     */
+    public int countOrdersToday() {
+        String sql = "SELECT COUNT(*) FROM orders " +
+                     "WHERE DATE(order_date) = CURDATE()";
+        try (
+            Connection conn = DBconfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
+        ) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.err.println("[OrderDAO] countOrdersToday failed: " + e.getMessage());
+        }
+        return 0;
+    }
 }

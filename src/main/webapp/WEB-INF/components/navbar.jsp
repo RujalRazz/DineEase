@@ -21,7 +21,7 @@ Object loggedInUser = session.getAttribute("user");
 		<li><a href="${pageContext.request.contextPath}/restaurants"
 			class="${activePage == 'restaurants' ? 'active' : ''}">Restaurants</a></li>
 		<li><a href="${pageContext.request.contextPath}/about-us"
-			class="${activePage == 'bookings' ? 'active' : ''}">About Us</a></li>
+			class="${activePage == 'about' ? 'active' : ''}">About Us</a></li>
 		<li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
 		<li></li>
 		<%
@@ -36,13 +36,7 @@ Object loggedInUser = session.getAttribute("user");
 		<%
 		}
 		%>
-		<% if (loggedInUser != null) { %>
-        <div>
-            <a href="#" class="nav-cart">
-                <img src="${pageContext.request.contextPath}/assets/cart.svg" alt="cart" />
-            </a>
-        </div>
-    <% } %>
+		
 	</ul>
 </nav>
 

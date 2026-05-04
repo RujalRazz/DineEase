@@ -148,5 +148,23 @@ public class UserDao {
 	     }
 	     return users;
 	 }
+	 /**
+	  * Counts users registered this month.
+	  */
+	 public int countUsersThisMonth() {
+		    String sql = "SELECT COUNT(*) FROM users " +
+		                 "WHERE MONTH(created_at) = MONTH(CURDATE()) " +
+		                 "AND YEAR(created_at) = YEAR(CURDATE())";
+		    try (
+		        Connection conn = DBconfig.getConnection();
+		        PreparedStatement ps = conn.prepareStatement(sql);
+		        ResultSet rs = ps.executeQuery()
+		    ) {
+		        if (rs.next()) return rs.getInt(1);
+		    } catch (SQLException e) {
+		        System.err.println("[UserDAO] countUsersThisMonth failed: " + e.getMessage());
+		    }
+		    return 0;
+		}
 }
 

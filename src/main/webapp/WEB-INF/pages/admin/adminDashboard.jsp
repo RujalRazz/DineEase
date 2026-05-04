@@ -307,18 +307,15 @@ tbody td {
 		<%-- ── Stats Cards ── --%>
 		<div class="stats-grid">
 
-			<%-- Total Users --%>
 			<div class="stat-card">
 				<div class="stat-top">
 					<div class="stat-label">Total Users</div>
 					<div class="stat-icon stat-icon-red">&#128101;</div>
 				</div>
-
 				<div class="stat-value"><%=request.getAttribute("userCount")%></div>
-
-
 				<div class="stat-sub">
-					<span>+0</span> this month
+					<span>+<%=request.getAttribute("userCountThisMonth")%></span>
+					this month
 				</div>
 			</div>
 
@@ -330,7 +327,8 @@ tbody td {
 				</div>
 				<div class="stat-value"><%=request.getAttribute("restaurantCount")%></div>
 				<div class="stat-sub">
-					<span>+0</span> this month
+					<span>+<%=request.getAttribute("restaurantCountMonth")%></span>
+					this month
 				</div>
 			</div>
 
@@ -340,9 +338,10 @@ tbody td {
 					<div class="stat-label">Bookings</div>
 					<div class="stat-icon stat-icon-blue">&#128197;</div>
 				</div>
-				<div class="stat-value">--</div>
+				<div class="stat-value"><%=request.getAttribute("bookingCount")%></div>
 				<div class="stat-sub">
-					<span>+0</span> this week
+					<span>+<%=request.getAttribute("bookingCountThisWeek")%></span>
+					this week
 				</div>
 			</div>
 
@@ -352,12 +351,11 @@ tbody td {
 					<div class="stat-label">Orders</div>
 					<div class="stat-icon stat-icon-amber">&#128722;</div>
 				</div>
-				<div class="stat-value">--</div>
+				<div class="stat-value"><%=request.getAttribute("orderCount")%></div>
 				<div class="stat-sub">
-					<span>+0</span> today
+					<span>+<%=request.getAttribute("orderCountToday")%></span> today
 				</div>
 			</div>
-
 		</div>
 
 		<div class="section-heading">Quick Actions</div>
@@ -390,98 +388,100 @@ tbody td {
 
 		<div class="two-col">
 
-    <%-- LEFT: Recent Users table --%>
-    <div class="table-card">
-        <div class="section-heading">Recent Users</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                </tr>
-            </thead>
-            <tbody>
-                <%
-                List<User> recentUsers = (List<User>) request.getAttribute("recentUsers");
-                if (recentUsers == null || recentUsers.isEmpty()) {
-                %>
-                    <tr>
-                        <td class="td-name">—</td>
-                        <td>No users yet</td>
-                        <td>—</td>
-                    </tr>
-                <%
-                } else {
-                    for (User u : recentUsers) {
-                %>
-                    <tr>
-                        <td class="td-name">
-                            <%= u.getFirst_name() %> <%= u.getLast_name() %>
-                        </td>
-                        <td><%= u.getEmail() %></td>
-                        <td><%= u.getPhone_number() %></td>
-                    </tr>
-                <%
-                    }
-                }
-                %>
-            </tbody>
-        </table>
-    </div>
+			<%-- LEFT: Recent Users table --%>
+			<div class="table-card">
+				<div class="section-heading">Recent Users</div>
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Phone</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%
+						List<User> recentUsers = (List<User>) request.getAttribute("recentUsers");
+						if (recentUsers == null || recentUsers.isEmpty()) {
+						%>
+						<tr>
+							<td class="td-name">—</td>
+							<td>No users yet</td>
+							<td>—</td>
+						</tr>
+						<%
+						} else {
+						for (User u : recentUsers) {
+						%>
+						<tr>
+							<td class="td-name"><%=u.getFirst_name()%> <%=u.getLast_name()%>
+							</td>
+							<td><%=u.getEmail()%></td>
+							<td><%=u.getPhone_number()%></td>
+						</tr>
+						<%
+						}
+						}
+						%>
+					</tbody>
+				</table>
+			</div>
 
-    <%-- RIGHT: Recent Restaurants table --%>
-    <div class="table-card">
-        <div class="section-heading">
-            Recent Restaurants
-            <a href="${pageContext.request.contextPath}/adminRestaurants">View All</a>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>City</th>
-                    <th>Price</th>
-                    <th>Rating</th>
-                </tr>
-            </thead>
-            <tbody>
-                <%
-                List<Restaurant> recentRestaurants =
-                    (List<Restaurant>) request.getAttribute("recentRestaurants");
-                if (recentRestaurants == null || recentRestaurants.isEmpty()) {
-                %>
-                    <tr>
-                        <td class="td-name">—</td>
-                        <td>No restaurants yet</td>
-                        <td>—</td>
-                        <td>—</td>
-                    </tr>
-                <%
-                } else {
-                    for (Restaurant r : recentRestaurants) {
-                %>
-                    <tr>
-                        <td class="td-name"><%= r.getName() %></td>
-                        <td><%= r.getCityId() %></td>
-                        <td>
-                            <div class="price-dots">
-                                <div class="price-dot <%= r.getPriceRange() >= 1 ? "filled" : "" %>"></div>
-                                <div class="price-dot <%= r.getPriceRange() >= 2 ? "filled" : "" %>"></div>
-                                <div class="price-dot <%= r.getPriceRange() >= 3 ? "filled" : "" %>"></div>
-                            </div>
-                        </td>
-                        <td>&#9733; <%= r.getRating() %></td>
-                    </tr>
-                <%
-                    }
-                }
-                %>
-            </tbody>
-        </table>
-    </div>
+			<%-- RIGHT: Recent Restaurants table --%>
+			<div class="table-card">
+				<div class="section-heading">
+					Recent Restaurants <a
+						href="${pageContext.request.contextPath}/adminRestaurants">View
+						All</a>
+				</div>
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>City</th>
+							<th>Price</th>
+							<th>Rating</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%
+						List<Restaurant> recentRestaurants = (List<Restaurant>) request.getAttribute("recentRestaurants");
+						if (recentRestaurants == null || recentRestaurants.isEmpty()) {
+						%>
+						<tr>
+							<td class="td-name">—</td>
+							<td>No restaurants yet</td>
+							<td>—</td>
+							<td>—</td>
+						</tr>
+						<%
+						} else {
+						for (Restaurant r : recentRestaurants) {
+						%>
+						<tr>
+							<td class="td-name"><%=r.getName()%></td>
+							<td><%=r.getCityId()%></td>
+							<td>
+								<div class="price-dots">
+									<div
+										class="price-dot <%=r.getPriceRange() >= 1 ? "filled" : ""%>"></div>
+									<div
+										class="price-dot <%=r.getPriceRange() >= 2 ? "filled" : ""%>"></div>
+									<div
+										class="price-dot <%=r.getPriceRange() >= 3 ? "filled" : ""%>"></div>
+								</div>
+							</td>
+							<td>&#9733; <%=r.getRating()%></td>
+						</tr>
+						<%
+						}
+						}
+						%>
+					</tbody>
+				</table>
+			</div>
 
-</div>
+		</div>
 	</main>
 
 </body>

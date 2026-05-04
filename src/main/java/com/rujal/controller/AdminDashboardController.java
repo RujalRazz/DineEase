@@ -1,5 +1,7 @@
 package com.rujal.controller;
 
+import com.rujal.dao.BookingDao;
+import com.rujal.dao.OrderDao;
 import com.rujal.dao.RestaurantDao;
 import com.rujal.dao.UserDao;
 import com.rujal.model.Admin;
@@ -25,6 +27,8 @@ import java.io.IOException;
 @WebServlet("/admin-dashboard")
 public class AdminDashboardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private BookingDao bookingDao = new BookingDao();
+	private OrderDao orderDao = new OrderDao();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -44,21 +48,37 @@ public class AdminDashboardController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		// Check admin session
 		HttpSession session = request.getSession(false);
-		int userCount = userDao.countUsers();
-		int restaurantCount = restaurantDao.countRestaurants();
-		List<User> recentUsers = userDao.getRecentUsers();
-		List<Restaurant> recentRestaurants = restaurantDao.getRecentRestaurants();
-		request.setAttribute("recentRestaurants", recentRestaurants);
-		request.setAttribute("recentUsers", recentUsers);
-		request.setAttribute("userCount", userCount);
-		request.setAttribute("restaurantCount", restaurantCount);
 		if (session == null || session.getAttribute("admin") == null) {
 			response.sendRedirect(request.getContextPath() + "/admin-login");
 			return;
 		}
-		Admin admin = (Admin) session.getAttribute("admin");
-		request.setAttribute("admin", admin);
+		int userCount = userDao.countUsers();
+		int userCountThisMonth = userDao.countUsersThisMonth();
+		int restaurantCount = restaurantDao.countRestaurants();
+		int restaurantCountMonth = restaurantDao.countRestaurantsThisMonth();
+		int bookingCount = bookingDao.countBookings();
+		int bookingCountThisWeek = bookingDao.countBookingsThisWeek();
+		int orderCount = orderDao.countOrders();
+		int orderCountToday = orderDao.countOrdersToday();
+
+		List<User> recentUsers = userDao.getRecentUsers();
+		List<Restaurant> recentRestaurants = restaurantDao.getRecentRestaurants();
+
+	
+		request.setAttribute("userCount", userCount);
+		request.setAttribute("userCountThisMonth", userCountThisMonth);
+		request.setAttribute("restaurantCount", restaurantCount);
+		request.setAttribute("restaurantCountMonth", restaurantCountMonth);
+		request.setAttribute("bookingCount", bookingCount);
+		request.setAttribute("bookingCountThisWeek", bookingCountThisWeek);
+		request.setAttribute("orderCount", orderCount);
+		request.setAttribute("orderCountToday", orderCountToday);
+		request.setAttribute("recentUsers", recentUsers);
+		request.setAttribute("recentRestaurants", recentRestaurants);
+		request.setAttribute("activeAdmin", "dashboard");
+
 		request.getRequestDispatcher("/WEB-INF/pages/admin/adminDashboard.jsp").forward(request, response);
 	}
 
