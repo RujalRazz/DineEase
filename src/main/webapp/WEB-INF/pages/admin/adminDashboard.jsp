@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Admin Dashboard</title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/admin.css" />
 <style>

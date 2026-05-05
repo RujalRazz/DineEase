@@ -14,12 +14,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * AdminRestaurantController handles all CRUD operations
@@ -51,6 +47,9 @@ public class AdminRestaurantController extends HttpServlet {
         }
         List<Restaurant> restaurants = restaurantDao.getAllRestaurants();
         List<City> cities = cityDao.getAllCities();
+        Map<Integer, String> cityFilterMap =
+        	    restaurantDao.getDistinctCitiesFromRestaurants();
+        	request.setAttribute("cityFilterMap", cityFilterMap);
 
         request.setAttribute("restaurants", restaurants);
         request.setAttribute("cities", cities);

@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Order Management</title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/admin.css" />
 <style>
@@ -52,6 +52,58 @@
 	padding: 12px 18px;
 	font-size: 13px;
 	margin-bottom: 20px;
+}
+
+.filter-toolbar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 20px;
+	flex-wrap: wrap;
+}
+
+.filter-input {
+	padding: 9px 14px;
+	border: 1.5px solid #e8e0dc;
+	border-radius: 50px;
+	font-size: 13px;
+	outline: none;
+	font-family: 'Segoe UI', sans-serif;
+	color: #2c1a10;
+	background: #fff;
+	transition: border-color 0.2s;
+	min-width: 200px;
+}
+
+.filter-input:focus {
+	border-color: #c0392b;
+}
+
+.btn-clear-date {
+	padding: 9px 16px;
+	border: 1.5px solid #e8e0dc;
+	border-radius: 50px;
+	background: #fff;
+	color: #999;
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.btn-clear-date:hover {
+	border-color: #c0392b;
+	color: #c0392b;
+}
+
+thead th[data-col] {
+	cursor: pointer;
+	user-select: none;
+	white-space: nowrap;
+}
+
+thead th[data-col]:hover {
+	color: #c0392b;
 }
 
 .table-card {
@@ -224,17 +276,24 @@ tbody td {
 		<%
 		}
 		%>
+		<div class="filter-toolbar">
+			<input type="text" id="searchInput" class="filter-input"
+				placeholder="&#128269; Search Bookings..." /> <input type="date"
+				id="dateFilter" class="filter-input" style="min-width: 160px;" />
 
+			<button id="clearDate" class="btn-clear-date">&#10005; Clear
+				Date</button>
+		</div>
 		<div class="table-card">
-			<table>
+			<table id="dataTable">
 				<thead>
 					<tr>
-						<th>#</th>
-						<th>User</th>
-						<th>Restaurant</th>
-						<th>Date</th>
-						<th>Total</th>
-						<th>Status</th>
+						<th data-col="0" data-type="number">#</th>
+						<th data-col="1">User</th>
+						<th data-col="2">Restaurant</th>
+						<th data-col="3">Date</th>
+						<th data-col="4" data-type="number">Total</th>
+						<th data-col="5">Status</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -257,15 +316,16 @@ tbody td {
 						double total = (double) o[4];
 						String status = (String) o[5];
 						String statusClass = "status-" + status.toLowerCase();
+						// Extract date part only for data-date attribute
+						String dateOnly = date != null && date.length() >= 10 ? date.substring(0, 10) : date;
 					%>
-					<tr>
+					<tr data-date="<%=dateOnly%>">
 						<td><%=orderId%></td>
 						<td class="td-name"><%=userName%></td>
 						<td><%=restName%></td>
 						<td><%=date%></td>
 						<td class="td-amount">Rs. <%=String.format("%.0f", total)%></td>
 						<td>
-						
 							<form action="${pageContext.request.contextPath}/adminOrders"
 								method="post" class="status-form">
 								<input type="hidden" name="action" value="updateStatus" /> <input
@@ -273,25 +333,20 @@ tbody td {
 									name="status" class="status-select <%=statusClass%>"
 									onchange="this.className='status-select status-'+this.value.toLowerCase()">
 									<option value="PENDING"
-										<%="PENDING".equals(status) ? "selected" : ""%>>
-										PENDING</option>
+										<%="PENDING".equals(status) ? "selected" : ""%>>PENDING</option>
 									<option value="CONFIRMED"
-										<%="CONFIRMED".equals(status) ? "selected" : ""%>>
-										CONFIRMED</option>
+										<%="CONFIRMED".equals(status) ? "selected" : ""%>>CONFIRMED</option>
 									<option value="DELIVERED"
-										<%="DELIVERED".equals(status) ? "selected" : ""%>>
-										DELIVERED</option>
+										<%="DELIVERED".equals(status) ? "selected" : ""%>>DELIVERED</option>
 									<option value="CANCELLED"
-										<%="CANCELLED".equals(status) ? "selected" : ""%>>
-										CANCELLED</option>
+										<%="CANCELLED".equals(status) ? "selected" : ""%>>CANCELLED</option>
 								</select>
 								<button type="submit" class="btn-update">Update</button>
 							</form>
 						</td>
 						<td>
 							<form action="${pageContext.request.contextPath}/adminOrders"
-								method="post"
-								onsubmit="return confirm('Delete this order and all its items?')">
+								method="post" onsubmit="return confirm('Delete this order?')">
 								<input type="hidden" name="action" value="delete" /> <input
 									type="hidden" name="order_id" value="<%=orderId%>" />
 								<button type="submit" class="btn-delete">Delete</button>
@@ -307,5 +362,15 @@ tbody td {
 		</div>
 
 	</main>
+	<script src="${pageContext.request.contextPath}/js/adminTable.js"></script>
+	<script>
+		initCombinedFilter({
+			searchId : 'searchInput',
+			dateInputId : 'dateFilter',
+			clearDateId : 'clearDate',
+			tableId : 'dataTable'
+		});
+		initColumnSort('dataTable');
+	</script>
 </body>
 </html>

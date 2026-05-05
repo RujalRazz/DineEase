@@ -2,12 +2,13 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="com.rujal.model.Restaurant"%>
 <%@ page import="com.rujal.model.City"%>
+<%@ page import="java.util.Map"%>
 <%@ page import="java.util.List"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Restaurant Management</title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/admin.css" />
 </head>
@@ -81,6 +82,80 @@
 	display: flex;
 	align-items: center;
 	gap: 8px;
+}
+
+.filter-toolbar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 20px;
+	flex-wrap: wrap;
+}
+
+.filter-input {
+	padding: 9px 14px;
+	border: 1.5px solid #e8e0dc;
+	border-radius: 50px;
+	font-size: 13px;
+	outline: none;
+	font-family: 'Segoe UI', sans-serif;
+	color: #2c1a10;
+	background: #fff;
+	transition: border-color 0.2s;
+	min-width: 200px;
+}
+
+.filter-input:focus {
+	border-color: #c0392b;
+}
+
+.filter-select {
+	padding: 9px 32px 9px 14px;
+	border: 1.5px solid #e8e0dc;
+	border-radius: 50px;
+	font-size: 13px;
+	outline: none;
+	font-family: 'Segoe UI', sans-serif;
+	color: #2c1a10;
+	background: #fff;
+	cursor: pointer;
+	appearance: none;
+	background-image:
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c0392b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	transition: border-color 0.2s;
+}
+
+.filter-select:focus {
+	border-color: #c0392b;
+}
+
+.btn-clear-date {
+	padding: 9px 16px;
+	border: 1.5px solid #e8e0dc;
+	border-radius: 50px;
+	background: #fff;
+	color: #999;
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.btn-clear-date:hover {
+	border-color: #c0392b;
+	color: #c0392b;
+}
+
+thead th[data-col] {
+	cursor: pointer;
+	user-select: none;
+	white-space: nowrap;
+}
+
+thead th[data-col]:hover {
+	color: #c0392b;
 }
 
 .table-card {
@@ -446,19 +521,46 @@ tbody td {
 		}
 		%>
 
-		<%-- Restaurant Table --%>
+		<%-- Filter toolbar --%>
+		<div class="filter-toolbar">
+
+			<%-- Global search --%>
+			<input type="text" id="searchInput" class="filter-input"
+				placeholder="&#128269; Search restaurants..." />
+
+			<%-- City filter — populated from database --%>
+			<select id="cityFilter" class="filter-select">
+				<option value="all">&#128205; All Cities</option>
+				<%
+				Map<Integer, String> cityFilterMap = (Map<Integer, String>) request.getAttribute("cityFilterMap");
+				if (cityFilterMap != null) {
+					for (Map.Entry<Integer, String> entry : cityFilterMap.entrySet()) {
+				%>
+				<option value="<%=entry.getValue().toLowerCase()%>">
+					<%=entry.getValue()%>
+				</option>
+				<%
+				}
+				}
+				%>
+			</select>
+
+		</div>
+
+		<%-- Table — id added for JS targeting --%>
 		<div class="table-card">
-			<table>
+			<table id="dataTable">
 				<thead>
 					<tr>
-						<th>#</th>
-						<th>Name</th>
-						<th>City</th>
-						<th>Address</th>
-						<th>Contact</th>
-						<th>Rating</th>
-						<th>Price</th>
-						<th>Badge</th>
+						<%-- data-col = column index, data-type = number for numeric sort --%>
+						<th data-col="0" data-type="number">#</th>
+						<th data-col="1">Name</th>
+						<th data-col="2">City</th>
+						<th data-col="3">Address</th>
+						<th data-col="4">Contact</th>
+						<th data-col="5" data-type="number">Rating</th>
+						<th data-col="6" data-type="number">Price</th>
+						<th data-col="7">Badge</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -469,12 +571,11 @@ tbody td {
 					<tr>
 						<td colspan="9"
 							style="text-align: center; padding: 40px; color: #bbb;">No
-							restaurants found. Click "Add Restaurant" to get started.</td>
+							restaurants found.</td>
 					</tr>
 					<%
 					} else {
 					for (Restaurant r : restaurants) {
-						// Find city name from cities list
 						String cityName = "—";
 						if (cities != null) {
 							for (City c : cities) {
@@ -486,7 +587,8 @@ tbody td {
 						}
 						String badge = r.getBadge() != null ? r.getBadge() : "none";
 					%>
-					<tr>
+					<%-- data-city used by JS city filter --%>
+					<tr data-city="<%=cityName.toLowerCase()%>">
 						<td><%=r.getRestaurantId()%></td>
 						<td class="td-name"><%=r.getName()%></td>
 						<td><%=cityName%></td>
@@ -509,27 +611,24 @@ tbody td {
 						</span></td>
 						<td>
 							<div class="action-btns">
-								<%-- Edit button — passes restaurant data to JS --%>
 								<button class="btn-edit"
 									onclick="openEditModal(
-                                    <%=r.getRestaurantId()%>,
-                                    <%=r.getCityId()%>,
-                                    '<%=r.getName().replace("'", "\\'")%>',
-                                    '<%=r.getAddress().replace("'", "\\'")%>',
-                                    '<%=r.getContact().replace("'", "\\'")%>',
-                                    '<%=r.getDescription() != null ? r.getDescription().replace("'", "\\'") : ""%>',
-                                    '<%=r.getImageUrl() != null ? r.getImageUrl().replace("'", "\\'") : ""%>',
-                                    <%=r.getRating()%>,
-                                    <%=r.getPriceRange()%>,
-                                    '<%=badge%>'
-                                )">Edit</button>
-
-								<%-- Delete button — passes ID and name to confirm modal --%>
+                                <%=r.getRestaurantId()%>,
+                                <%=r.getCityId()%>,
+                                '<%=r.getName().replace("'", "\\'")%>',
+                                '<%=r.getAddress().replace("'", "\\'")%>',
+                                '<%=r.getContact().replace("'", "\\'")%>',
+                                '<%=r.getDescription() != null ? r.getDescription().replace("'", "\\'") : ""%>',
+                                '<%=r.getImageUrl() != null ? r.getImageUrl().replace("'", "\\'") : ""%>',
+                                <%=r.getRating()%>,
+                                <%=r.getPriceRange()%>,
+                                '<%=badge%>'
+                            )">Edit</button>
 								<button class="btn-delete"
 									onclick="openDeleteModal(
-                                    <%=r.getRestaurantId()%>,
-                                    '<%=r.getName().replace("'", "\\'")%>'
-                                )">Delete</button>
+                                <%=r.getRestaurantId()%>,
+                                '<%=r.getName().replace("'", "\\'")%>'
+                            )">Delete</button>
 							</div>
 						</td>
 					</tr>
@@ -734,7 +833,15 @@ tbody td {
 			</div>
 		</div>
 	</div>
+	<script src="${pageContext.request.contextPath}/js/adminTable.js"></script>
 	<script>
+	initCombinedFilter({
+        searchId:    'searchInput',
+        citySelectId: 'cityFilter',
+        tableId:     'dataTable'
+    });
+
+    initColumnSort('dataTable');
     function openAddModal() {
         document.getElementById('addModal').classList.add('show');
     }

@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Menu Mangement</title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/admin.css" />
 <style>
@@ -74,6 +74,80 @@
 	padding: 12px 18px;
 	font-size: 13px;
 	margin-bottom: 20px;
+}
+
+.filter-toolbar {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 20px;
+	flex-wrap: wrap;
+}
+
+.filter-input {
+	padding: 9px 14px;
+	border: 1.5px solid #e8e0dc;
+	border-radius: 50px;
+	font-size: 13px;
+	outline: none;
+	font-family: 'Segoe UI', sans-serif;
+	color: #2c1a10;
+	background: #fff;
+	transition: border-color 0.2s;
+	min-width: 200px;
+}
+
+.filter-input:focus {
+	border-color: #c0392b;
+}
+
+.filter-select {
+	padding: 9px 32px 9px 14px;
+	border: 1.5px solid #e8e0dc;
+	border-radius: 50px;
+	font-size: 13px;
+	outline: none;
+	font-family: 'Segoe UI', sans-serif;
+	color: #2c1a10;
+	background: #fff;
+	cursor: pointer;
+	appearance: none;
+	background-image:
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c0392b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	transition: border-color 0.2s;
+}
+
+.filter-select:focus {
+	border-color: #c0392b;
+}
+
+.btn-clear-date {
+	padding: 9px 16px;
+	border: 1.5px solid #e8e0dc;
+	border-radius: 50px;
+	background: #fff;
+	color: #999;
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.btn-clear-date:hover {
+	border-color: #c0392b;
+	color: #c0392b;
+}
+
+thead th[data-col] {
+	cursor: pointer;
+	user-select: none;
+	white-space: nowrap;
+}
+
+thead th[data-col]:hover {
+	color: #c0392b;
 }
 
 .table-card {
@@ -456,17 +530,33 @@ tbody td {
 		<%
 		}
 		%>
-
+		<div class="filter-toolbar">
+			<input type="text" id="searchInput" class="filter-input"
+				placeholder="&#128269; Search menu items..." /> <select
+				id="categoryFilter" class="filter-select">
+				<option value="all">All Categories</option>
+				<%
+				List<String> categories = (List<String>) request.getAttribute("categories");
+				if (categories != null) {
+					for (String cat : categories) {
+				%>
+				<option value="<%=cat.toLowerCase()%>"><%=cat%></option>
+				<%
+				}
+				}
+				%>
+			</select>
+		</div>
 		<div class="table-card">
-			<table>
+			<table id="dataTable">
 				<thead>
 					<tr>
-						<th>#</th>
-						<th>Name</th>
-						<th>Category</th>
-						<th>Price</th>
-						<th>Description</th>
-						<th>Available</th>
+						<th data-col="0" data-type="number">#</th>
+						<th data-col="1">Name</th>
+						<th data-col="2">Category</th>
+						<th data-col="3" data-type="number">Price</th>
+						<th data-col="4">Description</th>
+						<th data-col="5">Available</th>
 						<th>Actions</th>
 					</tr>
 				</thead>
@@ -477,7 +567,7 @@ tbody td {
 					<tr>
 						<td colspan="7"
 							style="text-align: center; padding: 40px; color: #bbb;">No
-							menu items found. Click "Add Menu Item" to get started.</td>
+							menu items found.</td>
 					</tr>
 					<%
 					} else {
@@ -498,12 +588,14 @@ tbody td {
 						break;
 						}
 					%>
-					<tr>
+					<%-- data-category used by JS category filter --%>
+					<tr data-category="<%=item.getCategory().toLowerCase()%>">
 						<td><%=item.getItemId()%></td>
 						<td class="td-name"><%=item.getName()%></td>
 						<td><span class="cat-badge <%=catClass%>"> <%=item.getCategory()%>
 						</span></td>
-						<td class="td-price">Rs. <%=String.format("%.0f", item.getPrice())%></td>
+						<td class="td-price">Rs. <%=String.format("%.0f", item.getPrice())%>
+						</td>
 						<td
 							style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
 							<%=item.getDescription() != null ? item.getDescription() : "—"%>
@@ -516,19 +608,19 @@ tbody td {
 							<div class="action-btns">
 								<button class="btn-edit"
 									onclick="openEditModal(
-                                    <%=item.getItemId()%>,
-                                    '<%=item.getName().replace("'", "\\'")%>',
-                                    '<%=item.getDescription() != null ? item.getDescription().replace("'", "\\'") : ""%>',
-                                    <%=item.getPrice()%>,
-                                    '<%=item.getCategory()%>',
-                                    '<%=item.getImageUrl() != null ? item.getImageUrl().replace("'", "\\'") : ""%>',
-                                    <%=item.isAvailable()%>
-                                )">Edit</button>
+                            <%=item.getItemId()%>,
+                            '<%=item.getName().replace("'", "\\'")%>',
+                            '<%=item.getDescription() != null ? item.getDescription().replace("'", "\\'") : ""%>',
+                            <%=item.getPrice()%>,
+                            '<%=item.getCategory()%>',
+                            '<%=item.getImageUrl() != null ? item.getImageUrl().replace("'", "\\'") : ""%>',
+                            <%=item.isAvailable()%>
+                        )">Edit</button>
 								<button class="btn-delete"
 									onclick="openDeleteModal(
-                                    <%=item.getItemId()%>,
-                                    '<%=item.getName().replace("'", "\\'")%>'
-                                )">Delete</button>
+                            <%=item.getItemId()%>,
+                            '<%=item.getName().replace("'", "\\'")%>'
+                        )">Delete</button>
 							</div>
 						</td>
 					</tr>
@@ -663,8 +755,25 @@ tbody td {
 			</form>
 		</div>
 	</div>
-
+	<script src="${pageContext.request.contextPath}/js/adminTable.js"></script>
 	<script>
+	 initCombinedFilter({
+	        searchId:     'searchInput',
+	        citySelectId: 'categoryFilter',
+	        tableId:      'dataTable'
+	    });
+
+	    document.getElementById('categoryFilter')
+	        ?.addEventListener('change', function() {
+	            const val   = this.value.toLowerCase();
+	            const rows  = document.querySelectorAll('#dataTable tbody tr');
+	            rows.forEach(row => {
+	                const cat = (row.getAttribute('data-category') || '').toLowerCase();
+	                row.style.display = (!val || val === 'all' || cat === val) ? '' : 'none';
+	            });
+	        });
+
+	    initColumnSort('dataTable');
     function openAddModal() {
         document.getElementById('addModal').classList.add('show');
     }

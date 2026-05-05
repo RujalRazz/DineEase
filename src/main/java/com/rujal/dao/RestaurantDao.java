@@ -8,7 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * RestaurantDao handles all database operations for the Restaurant model.
@@ -224,5 +226,26 @@ public class RestaurantDao {
 	        System.err.println("[RestaurantDAO] countRestaurantsThisMonth failed: " + e.getMessage());
 	    }
 	    return 0;
+	}
+	public Map<Integer, String> getDistinctCitiesFromRestaurants() {
+	    Map<Integer, String> cityMap = new LinkedHashMap<>();
+	    String sql =
+	        "SELECT DISTINCT r.city_id, c.city_name " +
+	        "FROM restaurants r " +
+	        "JOIN cities c ON r.city_id = c.city_id " +
+	        "ORDER BY c.city_name ASC";
+
+	    try (
+	        Connection conn = DBconfig.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(sql);
+	        ResultSet rs = ps.executeQuery()
+	    ) {
+	        while (rs.next()) {
+	            cityMap.put(rs.getInt("city_id"), rs.getString("city_name"));
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("[RestaurantDAO] getDistinctCities failed: " + e.getMessage());
+	    }
+	    return cityMap;
 	}
 }

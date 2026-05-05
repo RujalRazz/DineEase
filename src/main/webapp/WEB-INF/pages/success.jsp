@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Payment Success</title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/styles.css" />
 <style>

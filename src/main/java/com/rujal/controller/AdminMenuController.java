@@ -49,6 +49,8 @@ public class AdminMenuController extends HttpServlet {
 
 		// Fetch all menu items
 		List<MenuItem> menuItems = menuItemDao.getAllMenuItems();
+		List<String> categories = menuItemDao.getDistinctCategories();
+		request.setAttribute("categories", categories);
 		request.setAttribute("menuItems", menuItems);
 		request.setAttribute("activeAdmin", "menu");
 
