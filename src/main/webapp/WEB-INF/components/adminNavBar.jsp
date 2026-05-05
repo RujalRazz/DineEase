@@ -8,7 +8,13 @@
 Admin adminUser = (Admin) session.getAttribute("admin");
 %>
 
-<aside class="admin-sidebar">
+<button type="button" class="admin-menu-toggle" aria-label="Open admin menu"
+	aria-expanded="false" aria-controls="adminSidebar">
+	<span></span> <span></span> <span></span>
+</button>
+<div class="admin-sidebar-backdrop"></div>
+
+<aside class="admin-sidebar" id="adminSidebar">
 
 	<div class="sidebar-brand">
 		<div class="sidebar-brand-icon">&#127859;</div>
@@ -61,3 +67,36 @@ Admin adminUser = (Admin) session.getAttribute("admin");
 	</a>
 
 </aside>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const toggle = document.querySelector('.admin-menu-toggle');
+		const sidebar = document.querySelector('.admin-sidebar');
+		const backdrop = document.querySelector('.admin-sidebar-backdrop');
+
+		if (!toggle || !sidebar || !backdrop) {
+			return;
+		}
+
+		function setSidebar(open) {
+			sidebar.classList.toggle('open', open);
+			backdrop.classList.toggle('show', open);
+			document.body.classList.toggle('admin-sidebar-open', open);
+			toggle.setAttribute('aria-expanded', open);
+		}
+
+		toggle.addEventListener('click', function() {
+			setSidebar(!sidebar.classList.contains('open'));
+		});
+
+		backdrop.addEventListener('click', function() {
+			setSidebar(false);
+		});
+
+		sidebar.querySelectorAll('a').forEach(function(link) {
+			link.addEventListener('click', function() {
+				setSidebar(false);
+			});
+		});
+	});
+</script>

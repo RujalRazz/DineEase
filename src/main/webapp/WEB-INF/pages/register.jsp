@@ -3,10 +3,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <meta charset="UTF-8">
 <title>Register Now!!</title>
 <link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/css/styles.css">
+	href="${pageContext.request.contextPath}/css/styles.css" />
 </head>
 <style>
 .page-body {
@@ -50,7 +52,7 @@
 	margin-bottom: 20px;
 }
 
-row {
+.row {
 	display: flex;
 	gap: 16px;
 }

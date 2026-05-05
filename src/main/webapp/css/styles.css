@@ -32,18 +32,18 @@ nav {
 	align-items: center;
 	text-decoration: none;
 }
+
 .brand-text {
-    font-size: 26px; /* Adjust size to feel balanced in the nav */
-    font-weight: 800; /* Extra bold for branding */
-    color: #C0392B; /* The signature Burnt Orange */
-    letter-spacing: -1px;
-    font-family: 'Segoe UI', sans-serif; /* Keep consistent with body font */
+	font-size: 26px; /* Adjust size to feel balanced in the nav */
+	font-weight: 800; /* Extra bold for branding */
+	color: #C0392B; /* The signature Burnt Orange */
+	letter-spacing: -1px;
+	font-family: 'Segoe UI', sans-serif;
+	/* Keep consistent with body font */
 }
 
-
-
 .nav-brand:hover {
-    opacity: 0.7;
+	opacity: 0.7;
 }
 
 .nav-links {
@@ -60,7 +60,7 @@ nav {
 	color: #2C1A10;
 	text-decoration: none;
 	transition: color 0.3s ease;
-    letter-spacing: 0.5px;
+	letter-spacing: 0.5px;
 }
 
 .nav-links a:hover, .nav-links a.active {
@@ -81,16 +81,17 @@ nav {
 .nav-links .logout:hover{
 	color: pink;
 } */
-.nav-cart{
+.nav-cart {
 	display: inline-flex;
-	align-items:center;
-	justify-content:center;
-	height:20px;
-	width:20px;
+	align-items: center;
+	justify-content: center;
+	height: 20px;
+	width: 20px;
 }
-.nav-cart img{
-	width:100%;
-	height:auto;
+
+.nav-cart img {
+	width: 100%;
+	height: auto;
 }
 
 .footer-link {
@@ -148,4 +149,272 @@ footer {
 
 .footer-links a:hover {
 	color: #c0392b;
+}
+
+.nav-toggle {
+	display: none;
+	width: 42px;
+	height: 42px;
+	border: none;
+	border-radius: 8px;
+	background: #c0392b;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 5px;
+	cursor: pointer;
+}
+
+.nav-toggle span {
+	display: block;
+	width: 20px;
+	height: 2px;
+	background: #fff;
+	border-radius: 2px;
+	transition: transform 0.2s, opacity 0.2s;
+}
+
+.nav-toggle.open span:nth-child(1) {
+	transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle.open span:nth-child(2) {
+	opacity: 0;
+}
+
+.nav-toggle.open span:nth-child(3) {
+	transform: translateY(-7px) rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+	body {
+		overflow-x: hidden;
+	}
+	nav.site-nav,
+	body > nav {
+		padding: 14px 18px !important;
+		flex-wrap: wrap !important;
+	}
+	.brand-text {
+		font-size: 22px !important;
+		letter-spacing: 0 !important;
+	}
+	.nav-toggle {
+		display: inline-flex !important;
+	}
+	.nav-links {
+		display: none !important;
+		flex-basis: 100% !important;
+		flex-direction: column !important;
+		align-items: stretch !important;
+		gap: 0 !important;
+		width: 100% !important;
+		margin-top: 14px !important;
+		padding: 10px 0 !important;
+		border-top: 1px solid rgba(44, 26, 16, 0.08) !important;
+	}
+	.nav-links.open {
+		display: flex !important;
+	}
+	.nav-links li {
+		width: 100% !important;
+	}
+	.nav-links a {
+		display: block !important;
+		width: 100% !important;
+		padding: 12px 4px !important;
+		font-size: 14px !important;
+		letter-spacing: 0 !important;
+	}
+	.nav-links a.active {
+		border-bottom: none !important;
+		padding-bottom: 12px !important;
+	}
+	.hero,
+	.about-hero {
+		min-height: auto !important;
+		padding: 48px 20px !important;
+		flex-direction: column !important;
+		align-items: flex-start !important;
+		gap: 28px !important;
+	}
+	.hero-title {
+		font-size: 42px !important;
+		letter-spacing: 0 !important;
+	}
+	.hero-subtitle,
+	.header-subtitle,
+	.section-body,
+	.cta-subtitle {
+		font-size: 15px !important;
+	}
+	.trending-card {
+		width: 100% !important;
+		max-width: 360px !important;
+		transform: none !important;
+		align-self: stretch !important;
+	}
+	.search-bar {
+		width: 100% !important;
+		max-width: none !important;
+		border-radius: 16px !important;
+		flex-wrap: wrap !important;
+		padding: 12px !important;
+	}
+	.search-bar select,
+	.find-btn {
+		width: 100% !important;
+	}
+	.section,
+	.restaurant-section,
+	.values-section,
+	.team-section,
+	.cta-section {
+		padding: 36px 20px !important;
+	}
+	.section-title,
+	.header-title,
+	.cta-title {
+		font-size: 28px !important;
+		letter-spacing: 0 !important;
+	}
+	.city-grid,
+	.restaurant-grid,
+	.values-grid,
+	.team-grid,
+	.stats-row {
+		grid-template-columns: 1fr !important;
+	}
+	.page-header,
+	.page-wrapper,
+	.page-layout,
+	.page-body,
+	.mission-section {
+		padding: 32px 20px !important;
+	}
+	.page-layout,
+	.mission-section {
+		grid-template-columns: 1fr !important;
+	}
+	.menu-content {
+		min-width: 0 !important;
+	}
+	.restaurant-info,
+	.menu-item,
+	.page-layout,
+	.mission-section,
+	.form-row,
+	.row,
+	.cta-btns {
+		flex-direction: column !important;
+		align-items: stretch !important;
+	}
+	.restaurant-img,
+	.menu-item-img,
+	.mission-image {
+		width: 100% !important;
+		max-width: 100% !important;
+	}
+	.menu-item-img {
+		height: 180px !important;
+	}
+	.cart-sidebar {
+		position: static !important;
+		width: 100% !important;
+		margin-top: 24px !important;
+	}
+	.login-container,
+	.card,
+	.payment-card,
+	.success-card,
+	.form-card,
+	.wrapper {
+		width: 100% !important;
+		max-width: 100% !important;
+		border-radius: 14px !important;
+	}
+	.login-container {
+		flex-direction: column !important;
+		grid-template-columns: 1fr !important;
+	}
+	.image-panel {
+		min-height: 220px !important;
+		padding: 28px !important;
+	}
+	.form-panel,
+	.card,
+	.payment-card,
+	.success-card,
+	.form-card,
+	.top-header,
+	.security-footer {
+		padding: 28px 22px !important;
+	}
+	.card-header,
+	.card-body,
+	.amount-display,
+	.dummy-card {
+		padding-left: 22px !important;
+		padding-right: 22px !important;
+	}
+	.filter-bar,
+	.filter-toolbar,
+	.model-btns,
+	.detail-row,
+	.amount-display,
+	.card-top,
+	.card-btns,
+	.trending-row,
+	.security-badges {
+		flex-direction: column !important;
+		align-items: stretch !important;
+	}
+	.filter-select,
+	.clear-btn,
+	.btn,
+	.btn-submit,
+	.btn-pay,
+	.btn-home,
+	.btn-primary,
+	.btn-secondary,
+	.btn-outline,
+	.btn-solid,
+	.model-btn-login,
+	.model-btn-cancel {
+		width: 100% !important;
+	}
+	.header-title,
+	.hero-title,
+	.success-title,
+	.form-panel h1,
+	.card h1,
+	.card-header-title,
+	.brand-title {
+		font-size: 30px !important;
+		letter-spacing: 0 !important;
+	}
+	.dummy-card-number {
+		font-size: 18px !important;
+		letter-spacing: 1px !important;
+	}
+	.model {
+		width: calc(100% - 32px) !important;
+		padding: 28px 22px !important;
+	}
+	.city-card,
+	.explore-more-card {
+		height: 210px !important;
+	}
+	footer {
+		padding: 24px 20px !important;
+		flex-direction: column !important;
+		align-items: flex-start !important;
+	}
+	.divider {
+		margin: 24px 20px !important;
+	}
+	.footer-links {
+		flex-direction: column !important;
+		gap: 10px !important;
+	}
 }
