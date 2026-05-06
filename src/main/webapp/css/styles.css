@@ -186,12 +186,11 @@ footer {
 	transform: translateY(-7px) rotate(-45deg);
 }
 
-@media (max-width: 768px) {
+@media ( max-width : 768px) {
 	body {
 		overflow-x: hidden;
 	}
-	nav.site-nav,
-	body > nav {
+	nav.site-nav, body>nav {
 		padding: 14px 18px !important;
 		flex-wrap: wrap !important;
 	}
@@ -230,8 +229,7 @@ footer {
 		border-bottom: none !important;
 		padding-bottom: 12px !important;
 	}
-	.hero,
-	.about-hero {
+	.hero, .about-hero {
 		min-height: auto !important;
 		padding: 48px 20px !important;
 		flex-direction: column !important;
@@ -242,10 +240,7 @@ footer {
 		font-size: 42px !important;
 		letter-spacing: 0 !important;
 	}
-	.hero-subtitle,
-	.header-subtitle,
-	.section-body,
-	.cta-subtitle {
+	.hero-subtitle, .header-subtitle, .section-body, .cta-subtitle {
 		font-size: 15px !important;
 	}
 	.trending-card {
@@ -261,57 +256,36 @@ footer {
 		flex-wrap: wrap !important;
 		padding: 12px !important;
 	}
-	.search-bar select,
-	.find-btn {
+	.search-bar select, .find-btn {
 		width: 100% !important;
 	}
-	.section,
-	.restaurant-section,
-	.values-section,
-	.team-section,
-	.cta-section {
+	.section, .restaurant-section, .values-section, .team-section,
+		.cta-section {
 		padding: 36px 20px !important;
 	}
-	.section-title,
-	.header-title,
-	.cta-title {
+	.section-title, .header-title, .cta-title {
 		font-size: 28px !important;
 		letter-spacing: 0 !important;
 	}
-	.city-grid,
-	.restaurant-grid,
-	.values-grid,
-	.team-grid,
-	.stats-row {
+	.city-grid, .restaurant-grid, .values-grid, .team-grid, .stats-row {
 		grid-template-columns: 1fr !important;
 	}
-	.page-header,
-	.page-wrapper,
-	.page-layout,
-	.page-body,
-	.mission-section {
+	.page-header, .page-wrapper, .page-layout, .page-body, .mission-section
+		{
 		padding: 32px 20px !important;
 	}
-	.page-layout,
-	.mission-section {
+	.page-layout, .mission-section {
 		grid-template-columns: 1fr !important;
 	}
 	.menu-content {
 		min-width: 0 !important;
 	}
-	.restaurant-info,
-	.menu-item,
-	.page-layout,
-	.mission-section,
-	.form-row,
-	.row,
-	.cta-btns {
+	.restaurant-info, .menu-item, .page-layout, .mission-section, .form-row,
+		.row, .cta-btns {
 		flex-direction: column !important;
 		align-items: stretch !important;
 	}
-	.restaurant-img,
-	.menu-item-img,
-	.mission-image {
+	.restaurant-img, .menu-item-img, .mission-image {
 		width: 100% !important;
 		max-width: 100% !important;
 	}
@@ -323,12 +297,8 @@ footer {
 		width: 100% !important;
 		margin-top: 24px !important;
 	}
-	.login-container,
-	.card,
-	.payment-card,
-	.success-card,
-	.form-card,
-	.wrapper {
+	.login-container, .card, .payment-card, .success-card, .form-card,
+		.wrapper {
 		width: 100% !important;
 		max-width: 100% !important;
 		border-radius: 14px !important;
@@ -341,55 +311,26 @@ footer {
 		min-height: 220px !important;
 		padding: 28px !important;
 	}
-	.form-panel,
-	.card,
-	.payment-card,
-	.success-card,
-	.form-card,
-	.top-header,
-	.security-footer {
+	.form-panel, .card, .payment-card, .success-card, .form-card,
+		.top-header, .security-footer {
 		padding: 28px 22px !important;
 	}
-	.card-header,
-	.card-body,
-	.amount-display,
-	.dummy-card {
+	.card-header, .card-body, .amount-display, .dummy-card {
 		padding-left: 22px !important;
 		padding-right: 22px !important;
 	}
-	.filter-bar,
-	.filter-toolbar,
-	.model-btns,
-	.detail-row,
-	.amount-display,
-	.card-top,
-	.card-btns,
-	.trending-row,
-	.security-badges {
+	.filter-bar, .filter-toolbar, .model-btns, .detail-row, .amount-display,
+		.card-top, .card-btns, .trending-row, .security-badges {
 		flex-direction: column !important;
 		align-items: stretch !important;
 	}
-	.filter-select,
-	.clear-btn,
-	.btn,
-	.btn-submit,
-	.btn-pay,
-	.btn-home,
-	.btn-primary,
-	.btn-secondary,
-	.btn-outline,
-	.btn-solid,
-	.model-btn-login,
-	.model-btn-cancel {
+	.filter-select, .clear-btn, .btn, .btn-submit, .btn-pay, .btn-home,
+		.btn-primary, .btn-secondary, .btn-outline, .btn-solid,
+		.model-btn-login, .model-btn-cancel {
 		width: 100% !important;
 	}
-	.header-title,
-	.hero-title,
-	.success-title,
-	.form-panel h1,
-	.card h1,
-	.card-header-title,
-	.brand-title {
+	.header-title, .hero-title, .success-title, .form-panel h1, .card h1,
+		.card-header-title, .brand-title {
 		font-size: 30px !important;
 		letter-spacing: 0 !important;
 	}
@@ -401,8 +342,7 @@ footer {
 		width: calc(100% - 32px) !important;
 		padding: 28px 22px !important;
 	}
-	.city-card,
-	.explore-more-card {
+	.city-card, .explore-more-card {
 		height: 210px !important;
 	}
 	footer {

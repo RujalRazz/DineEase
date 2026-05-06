@@ -61,7 +61,7 @@ public class AdminCityController extends HttpServlet {
         String action = request.getParameter("action");
 
         if (action == null) {
-            response.sendRedirect(request.getContextPath() + "/adminCity");
+            response.sendRedirect(request.getContextPath() + "/adminCities");
             return;
         }
 
@@ -76,7 +76,7 @@ public class AdminCityController extends HttpServlet {
                 handleDelete(request, response);
                 break;
             default:
-                response.sendRedirect(request.getContextPath() + "/adminCity");
+                response.sendRedirect(request.getContextPath() + "/adminCities");
         }
 	}
 	private void handleAdd(HttpServletRequest request, HttpServletResponse response)
@@ -93,7 +93,7 @@ public class AdminCityController extends HttpServlet {
             request.getSession().setAttribute("errorMessage", "Error: " + e.getMessage());
         }
 
-        response.sendRedirect(request.getContextPath() + "/adminCity");
+        response.sendRedirect(request.getContextPath() + "/adminCities");
     }
 
     private void handleUpdate(HttpServletRequest request, HttpServletResponse response)
@@ -113,7 +113,7 @@ public class AdminCityController extends HttpServlet {
             request.getSession().setAttribute("errorMessage", "Error: " + e.getMessage());
         }
 
-        response.sendRedirect(request.getContextPath() + "/adminCity");
+        response.sendRedirect(request.getContextPath() + "/adminCities");
     }
 
     private void handleDelete(HttpServletRequest request, HttpServletResponse response)
@@ -129,7 +129,7 @@ public class AdminCityController extends HttpServlet {
             request.getSession().setAttribute("errorMessage", "Error: " + e.getMessage());
         }
 
-        response.sendRedirect(request.getContextPath() + "/adminCity");
+        response.sendRedirect(request.getContextPath() + "/adminCities");
     }
     private City buildCityFromRequest(HttpServletRequest request) {
         City city = new City();
