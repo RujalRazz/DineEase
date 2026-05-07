@@ -166,5 +166,21 @@ public class UserDao {
 		    }
 		    return 0;
 		}
+	 public boolean updatePassword(String email, String newPassword) {
+		    String sql = "UPDATE users SET password = ? WHERE email = ?";
+		    try (
+		        Connection conn = DBconfig.getConnection();
+		        PreparedStatement ps = conn.prepareStatement(sql)
+		    ) {
+		        // Hash the new password before storing
+		        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+		        ps.setString(1, hashedPassword);
+		        ps.setString(2, email);
+		        return ps.executeUpdate() > 0;
+		    } catch (SQLException e) {
+		        System.err.println("[UserDAO] updatePassword failed: " + e.getMessage());
+		        return false;
+		    }
+		}
 }
 

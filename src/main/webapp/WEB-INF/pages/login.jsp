@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <meta charset="UTF-8">
 <title>Login Here</title>
@@ -247,7 +247,8 @@
 			<%-- Right: login form panel --%>
 			<div class="form-panel">
 				<h1>Welcome Back</h1>
-				<p class="subtitle">Please enter your credentials to access our features.</p>
+				<p class="subtitle">Please enter your credentials to access our
+					features.</p>
 
 				<%-- Display success message when redirected from RegisterServlet --%>
 				<%
@@ -285,7 +286,8 @@
 					<%-- Password field with forgot password link --%>
 					<div class="form-group">
 						<div class="label-row">
-							<label for="password">Password</label> <a href="#"
+							<label for="password">Password</label> <a
+								href="${pageContext.request.contextPath}/forgotPassword"
 								class="forgot-link">Forgot password?</a>
 						</div>
 						<div class="input-wrap">
