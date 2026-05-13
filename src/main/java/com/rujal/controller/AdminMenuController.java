@@ -2,6 +2,8 @@ package com.rujal.controller;
 
 import com.rujal.dao.MenuItemDao;
 import com.rujal.model.MenuItem;
+import com.rujal.util.PaginationUtil;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -47,18 +49,29 @@ public class AdminMenuController extends HttpServlet {
 			return;
 		}
 
-		// Fetch all menu items
-		List<MenuItem> menuItems = menuItemDao.getAllMenuItems();
-		List<String> categories = menuItemDao.getDistinctCategories();
-		request.setAttribute("categories", categories);
-		request.setAttribute("menuItems", menuItems);
-		request.setAttribute("activeAdmin", "menu");
+		// ── Pagination ──
+		int pageSize = PaginationUtil.ADMIN_PAGE_SIZE;
+		int totalCount = menuItemDao.countAllMenuItems();
+		int totalPages = PaginationUtil.getTotalPages(totalCount, pageSize);
+		int currentPage = PaginationUtil.clampPage(PaginationUtil.parsePage(request.getParameter("page")), totalPages);
+		int offset = PaginationUtil.getOffset(currentPage, pageSize);
 
-		// Read and clear flash messages
-		request.setAttribute("successMessage", session.getAttribute("successMessage"));
-		request.setAttribute("errorMessage", session.getAttribute("errorMessage"));
+		List<MenuItem> menuItems = menuItemDao.getMenuItemsPaginated(pageSize, offset);
+		List<String> categories = menuItemDao.getDistinctCategories();
+
+		String successMessage = (String) session.getAttribute("successMessage");
+		String errorMessage = (String) session.getAttribute("errorMessage");
 		session.removeAttribute("successMessage");
 		session.removeAttribute("errorMessage");
+
+		request.setAttribute("menuItems", menuItems);
+		request.setAttribute("categories", categories);
+		request.setAttribute("successMessage", successMessage);
+		request.setAttribute("errorMessage", errorMessage);
+		request.setAttribute("currentPage", currentPage);
+		request.setAttribute("totalPages", totalPages);
+		request.setAttribute("totalCount", totalCount);
+		request.setAttribute("activeAdmin", "menu");
 
 		request.getRequestDispatcher("/WEB-INF/pages/admin/adminMenu.jsp").forward(request, response);
 	}
@@ -71,63 +84,60 @@ public class AdminMenuController extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		// Check admin session
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin") == null) {
-            response.sendRedirect(request.getContextPath() + "/adminLogin");
-            return;
-        }
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("admin") == null) {
+			response.sendRedirect(request.getContextPath() + "/adminLogin");
+			return;
+		}
 
-        String action = request.getParameter("action");
+		String action = request.getParameter("action");
 
-        switch (action) {
-            case "add":
-                handleAdd(request, session);
-                break;
-            case "edit":
-                handleEdit(request, session);
-                break;
-            case "delete":
-                handleDelete(request, session);
-                break;
-        }
+		switch (action) {
+		case "add":
+			handleAdd(request, session);
+			break;
+		case "edit":
+			handleEdit(request, session);
+			break;
+		case "delete":
+			handleDelete(request, session);
+			break;
+		}
 
-        response.sendRedirect(request.getContextPath() + "/adminMenu");
-    }
+		response.sendRedirect(request.getContextPath() + "/adminMenu");
+	}
 
-    private void handleAdd(HttpServletRequest request, HttpSession session) {
-        MenuItem item = buildFromRequest(request);
-        boolean success = menuItemDao.addMenuItem(item);
-        session.setAttribute(success ? "successMessage" : "errorMessage",
-            success ? "Menu item added!" : "Failed to add menu item.");
-    }
+	private void handleAdd(HttpServletRequest request, HttpSession session) {
+		MenuItem item = buildFromRequest(request);
+		boolean success = menuItemDao.addMenuItem(item);
+		session.setAttribute(success ? "successMessage" : "errorMessage",
+				success ? "Menu item added!" : "Failed to add menu item.");
+	}
 
+	private void handleEdit(HttpServletRequest request, HttpSession session) {
+		MenuItem item = buildFromRequest(request);
+		item.setItemId(Integer.parseInt(request.getParameter("item_id")));
+		boolean success = menuItemDao.updateMenuItem(item);
+		session.setAttribute(success ? "successMessage" : "errorMessage",
+				success ? "Menu item updated!" : "Failed to update menu item.");
+	}
 
-    private void handleEdit(HttpServletRequest request, HttpSession session) {
-        MenuItem item = buildFromRequest(request);
-        item.setItemId(Integer.parseInt(request.getParameter("item_id")));
-        boolean success = menuItemDao.updateMenuItem(item);
-        session.setAttribute(success ? "successMessage" : "errorMessage",
-            success ? "Menu item updated!" : "Failed to update menu item.");
-    }
+	private void handleDelete(HttpServletRequest request, HttpSession session) {
+		int itemId = Integer.parseInt(request.getParameter("item_id"));
+		boolean success = menuItemDao.deleteMenuItem(itemId);
+		session.setAttribute(success ? "successMessage" : "errorMessage",
+				success ? "Menu item deleted!" : "Failed to delete menu item.");
+	}
 
-
-    private void handleDelete(HttpServletRequest request, HttpSession session) {
-        int itemId = Integer.parseInt(request.getParameter("item_id"));
-        boolean success = menuItemDao.deleteMenuItem(itemId);
-        session.setAttribute(success ? "successMessage" : "errorMessage",
-            success ? "Menu item deleted!" : "Failed to delete menu item.");
-    }
-
-
-    private MenuItem buildFromRequest(HttpServletRequest request) {
-        MenuItem item = new MenuItem();
-        item.setName(request.getParameter("name"));
-        item.setDescription(request.getParameter("description"));
-        item.setPrice(Double.parseDouble(request.getParameter("price")));
-        item.setCategory(request.getParameter("category"));
-        item.setImageUrl(request.getParameter("image_url"));
-        item.setAvailable("on".equals(request.getParameter("is_available")));
-        return item;
+	private MenuItem buildFromRequest(HttpServletRequest request) {
+		MenuItem item = new MenuItem();
+		item.setName(request.getParameter("name"));
+		item.setDescription(request.getParameter("description"));
+		item.setPrice(Double.parseDouble(request.getParameter("price")));
+		item.setCategory(request.getParameter("category"));
+		item.setImageUrl(request.getParameter("image_url"));
+		item.setAvailable("on".equals(request.getParameter("is_available")));
+		return item;
 	}
 
 }

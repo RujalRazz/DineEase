@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <meta charset="UTF-8">
 <title>Restaurants – DineEase</title>
@@ -353,7 +353,18 @@
 	<div class="restaurant-section">
 		<div class="restaurant-grid" id="restaurantGrid"></div>
 	</div>
-
+	<%
+	String baseUrl = "/restaurants?";
+	if (selectedCity > 0)
+		baseUrl += "city=" + selectedCity + "&";
+	if (!selectedPrice.isEmpty())
+		baseUrl += "price=" + selectedPrice + "&";
+	// Remove trailing & if present
+	if (baseUrl.endsWith("&"))
+		baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+	request.setAttribute("baseUrl", baseUrl);
+	%>
+	<jsp:include page="/WEB-INF/components/pagination.jsp" />
 
 	<jsp:include page="/WEB-INF/components/footer.jsp" />
 

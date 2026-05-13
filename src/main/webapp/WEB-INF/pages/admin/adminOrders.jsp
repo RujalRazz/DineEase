@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <meta charset="UTF-8">
 <title>Order Management</title>
@@ -361,6 +361,10 @@ tbody td {
 					%>
 				</tbody>
 			</table>
+			<%
+			request.setAttribute("baseUrl", "/adminOrders");
+			%>
+			<jsp:include page="/WEB-INF/components/pagination.jsp" />
 		</div>
 
 	</main>

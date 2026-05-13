@@ -1,6 +1,8 @@
 package com.rujal.controller;
 
 import com.rujal.dao.BookingDao;
+import com.rujal.util.PaginationUtil;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -46,16 +48,26 @@ public class AdminBookingController extends HttpServlet {
 			return;
 		}
 
-		// Fetch all bookings with user and restaurant names
-		List<Object[]> bookings = bookingDao.getAllBookingsWithDetails();
-		request.setAttribute("bookings", bookings);
-		request.setAttribute("activeAdmin", "bookings");
+		int pageSize = PaginationUtil.ADMIN_PAGE_SIZE;
+		int totalCount = bookingDao.countAllBookings();
+		int totalPages = PaginationUtil.getTotalPages(totalCount, pageSize);
+		int currentPage = PaginationUtil.clampPage(PaginationUtil.parsePage(request.getParameter("page")), totalPages);
+		int offset = PaginationUtil.getOffset(currentPage, pageSize);
 
-		// Read and clear flash messages
-		request.setAttribute("successMessage", session.getAttribute("successMessage"));
-		request.setAttribute("errorMessage", session.getAttribute("errorMessage"));
+		List<Object[]> bookings = bookingDao.getBookingsWithDetailsPaginated(pageSize, offset);
+
+		String successMessage = (String) session.getAttribute("successMessage");
+		String errorMessage = (String) session.getAttribute("errorMessage");
 		session.removeAttribute("successMessage");
 		session.removeAttribute("errorMessage");
+
+		request.setAttribute("bookings", bookings);
+		request.setAttribute("successMessage", successMessage);
+		request.setAttribute("errorMessage", errorMessage);
+		request.setAttribute("currentPage", currentPage);
+		request.setAttribute("totalPages", totalPages);
+		request.setAttribute("totalCount", totalCount);
+		request.setAttribute("activeAdmin", "bookings");
 
 		request.getRequestDispatcher("/WEB-INF/pages/admin/adminBookings.jsp").forward(request, response);
 	}

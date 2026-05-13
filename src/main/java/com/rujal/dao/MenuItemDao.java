@@ -142,4 +142,41 @@ public class MenuItemDao {
 		}
 		return categories;
 	}
+
+	/**
+	 * Returns total menu item count for pagination.
+	 */
+	public int countAllMenuItems() {
+		String sql = "SELECT COUNT(*) FROM menu_items";
+		try (Connection conn = DBconfig.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			if (rs.next())
+				return rs.getInt(1);
+		} catch (SQLException e) {
+			System.err.println("[MenuItemDAO] countAllMenuItems: " + e.getMessage());
+		}
+		return 0;
+	}
+
+	/**
+	 * Fetches a paginated list of menu items.
+	 */
+	public List<MenuItem> getMenuItemsPaginated(int limit, int offset) {
+		List<MenuItem> list = new ArrayList<>();
+		String sql = "SELECT * FROM menu_items " + "ORDER BY item_id ASC " + "LIMIT ? OFFSET ?";
+
+		try (Connection conn = DBconfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setInt(1, limit);
+			ps.setInt(2, offset);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next())
+					list.add(mapResultSet(rs));
+			}
+		} catch (SQLException e) {
+			System.err.println("[MenuItemDAO] getMenuItemsPaginated: " + e.getMessage());
+		}
+		return list;
+	}
+	
 }

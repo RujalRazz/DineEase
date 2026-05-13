@@ -208,44 +208,111 @@ public class RestaurantDao {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Counts restaurants added this month using created_at column.
 	 */
 	public int countRestaurantsThisMonth() {
-	    String sql = "SELECT COUNT(*) FROM restaurants " +
-	                 "WHERE MONTH(created_at) = MONTH(CURDATE()) " +
-	                 "AND YEAR(created_at) = YEAR(CURDATE())";
-	    try (
-	        Connection conn = DBconfig.getConnection();
-	        PreparedStatement ps = conn.prepareStatement(sql);
-	        ResultSet rs = ps.executeQuery()
-	    ) {
-	        if (rs.next()) return rs.getInt(1);
-	    } catch (SQLException e) {
-	        System.err.println("[RestaurantDAO] countRestaurantsThisMonth failed: " + e.getMessage());
-	    }
-	    return 0;
+		String sql = "SELECT COUNT(*) FROM restaurants " + "WHERE MONTH(created_at) = MONTH(CURDATE()) "
+				+ "AND YEAR(created_at) = YEAR(CURDATE())";
+		try (Connection conn = DBconfig.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			if (rs.next())
+				return rs.getInt(1);
+		} catch (SQLException e) {
+			System.err.println("[RestaurantDAO] countRestaurantsThisMonth failed: " + e.getMessage());
+		}
+		return 0;
 	}
-	public Map<Integer, String> getDistinctCitiesFromRestaurants() {
-	    Map<Integer, String> cityMap = new LinkedHashMap<>();
-	    String sql =
-	        "SELECT DISTINCT r.city_id, c.city_name " +
-	        "FROM restaurants r " +
-	        "JOIN cities c ON r.city_id = c.city_id " +
-	        "ORDER BY c.city_name ASC";
 
-	    try (
-	        Connection conn = DBconfig.getConnection();
-	        PreparedStatement ps = conn.prepareStatement(sql);
-	        ResultSet rs = ps.executeQuery()
-	    ) {
-	        while (rs.next()) {
-	            cityMap.put(rs.getInt("city_id"), rs.getString("city_name"));
-	        }
-	    } catch (SQLException e) {
-	        System.err.println("[RestaurantDAO] getDistinctCities failed: " + e.getMessage());
-	    }
-	    return cityMap;
+	public Map<Integer, String> getDistinctCitiesFromRestaurants() {
+		Map<Integer, String> cityMap = new LinkedHashMap<>();
+		String sql = "SELECT DISTINCT r.city_id, c.city_name " + "FROM restaurants r "
+				+ "JOIN cities c ON r.city_id = c.city_id " + "ORDER BY c.city_name ASC";
+
+		try (Connection conn = DBconfig.getConnection();
+				PreparedStatement ps = conn.prepareStatement(sql);
+				ResultSet rs = ps.executeQuery()) {
+			while (rs.next()) {
+				cityMap.put(rs.getInt("city_id"), rs.getString("city_name"));
+			}
+		} catch (SQLException e) {
+			System.err.println("[RestaurantDAO] getDistinctCities failed: " + e.getMessage());
+		}
+		return cityMap;
+	}
+
+	public int countRestaurantsFiltered(int cityId) {
+		StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM restaurants ");
+		if (cityId > 0)
+			sql.append("WHERE city_id = ?");
+
+		try (Connection conn = DBconfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+			if (cityId > 0)
+				ps.setInt(1, cityId);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next())
+					return rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			System.err.println("[RestaurantDAO] countRestaurantsFiltered: " + e.getMessage());
+		}
+		return 0;
+	}
+
+	/**
+	 * Fetches a single page of restaurants with optional city filter and price sort
+	 * using LIMIT and OFFSET.
+	 */
+	public List<Restaurant> getRestaurantsPaginated(int cityId, String priceSort, int limit, int offset) {
+
+		List<Restaurant> list = new ArrayList<>();
+		StringBuilder sql = new StringBuilder("SELECT * FROM restaurants ");
+
+		if (cityId > 0)
+			sql.append("WHERE city_id = ? ");
+
+		if (priceSort != null && !priceSort.isEmpty()) {
+			sql.append("ORDER BY price_range ").append("asc".equals(priceSort) ? "ASC " : "DESC ");
+		}
+
+		sql.append("LIMIT ? OFFSET ?");
+
+		try (Connection conn = DBconfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+			int idx = 1;
+			if (cityId > 0)
+				ps.setInt(idx++, cityId);
+			ps.setInt(idx++, limit);
+			ps.setInt(idx, offset);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next())
+					list.add(mapResultSet(rs));
+			}
+		} catch (SQLException e) {
+			System.err.println("[RestaurantDAO] getRestaurantsPaginated: " + e.getMessage());
+		}
+		return list;
+	}
+
+	/**
+	 * Fetches a single page of all restaurants for admin.
+	 */
+	public List<Restaurant> getAllRestaurantsPaginated(int limit, int offset) {
+		List<Restaurant> list = new ArrayList<>();
+		String sql = "SELECT * FROM restaurants " + "ORDER BY restaurant_id DESC " + "LIMIT ? OFFSET ?";
+
+		try (Connection conn = DBconfig.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+			ps.setInt(1, limit);
+			ps.setInt(2, offset);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next())
+					list.add(mapResultSet(rs));
+			}
+		} catch (SQLException e) {
+			System.err.println("[RestaurantDAO] getAllRestaurantsPaginated: " + e.getMessage());
+		}
+		return list;
 	}
 }

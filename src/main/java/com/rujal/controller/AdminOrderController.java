@@ -1,6 +1,8 @@
 package com.rujal.controller;
 
 import com.rujal.dao.OrderDao;
+import com.rujal.util.PaginationUtil;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -41,27 +43,34 @@ public class AdminOrderController extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		// Check admin session
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin") == null) {
-            response.sendRedirect(request.getContextPath() + "/adminLogin");
-            return;
-        }
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("admin") == null) {
+			response.sendRedirect(request.getContextPath() + "/adminLogin");
+			return;
+		}
 
-        // Fetch all orders with user and restaurant names
-        List<Object[]> orders = orderDao.getAllOrdersWithDetails();
-        request.setAttribute("orders", orders);
-        request.setAttribute("activeAdmin", "orders");
+		int pageSize = PaginationUtil.ADMIN_PAGE_SIZE;
+		int totalCount = orderDao.countAllOrders();
+		int totalPages = PaginationUtil.getTotalPages(totalCount, pageSize);
+		int currentPage = PaginationUtil.clampPage(PaginationUtil.parsePage(request.getParameter("page")), totalPages);
+		int offset = PaginationUtil.getOffset(currentPage, pageSize);
 
-        // Read and clear flash messages
-        request.setAttribute("successMessage",
-            session.getAttribute("successMessage"));
-        request.setAttribute("errorMessage",
-            session.getAttribute("errorMessage"));
-        session.removeAttribute("successMessage");
-        session.removeAttribute("errorMessage");
+		List<Object[]> orders = orderDao.getOrdersWithDetailsPaginated(pageSize, offset);
 
-        request.getRequestDispatcher("/WEB-INF/pages/admin/adminOrders.jsp")
-               .forward(request, response);
+		String successMessage = (String) session.getAttribute("successMessage");
+		String errorMessage = (String) session.getAttribute("errorMessage");
+		session.removeAttribute("successMessage");
+		session.removeAttribute("errorMessage");
+
+		request.setAttribute("orders", orders);
+		request.setAttribute("successMessage", successMessage);
+		request.setAttribute("errorMessage", errorMessage);
+		request.setAttribute("currentPage", currentPage);
+		request.setAttribute("totalPages", totalPages);
+		request.setAttribute("totalCount", totalCount);
+		request.setAttribute("activeAdmin", "orders");
+
+		request.getRequestDispatcher("/WEB-INF/pages/admin/adminOrders.jsp").forward(request, response);
 	}
 
 	/**
@@ -72,31 +81,31 @@ public class AdminOrderController extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		// Check admin session
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("admin") == null) {
-            response.sendRedirect(request.getContextPath() + "/adminLogin");
-            return;
-        }
+		HttpSession session = request.getSession(false);
+		if (session == null || session.getAttribute("admin") == null) {
+			response.sendRedirect(request.getContextPath() + "/adminLogin");
+			return;
+		}
 
-        String action = request.getParameter("action");
+		String action = request.getParameter("action");
 
-        if ("updateStatus".equals(action)) {
-            // Update order status
-            int orderId = Integer.parseInt(request.getParameter("order_id"));
-            String status = request.getParameter("status");
-            boolean success = orderDao.updateStatus(orderId, status);
-            session.setAttribute(success ? "successMessage" : "errorMessage",
-                success ? "Order status updated!" : "Failed to update status.");
+		if ("updateStatus".equals(action)) {
+			// Update order status
+			int orderId = Integer.parseInt(request.getParameter("order_id"));
+			String status = request.getParameter("status");
+			boolean success = orderDao.updateStatus(orderId, status);
+			session.setAttribute(success ? "successMessage" : "errorMessage",
+					success ? "Order status updated!" : "Failed to update status.");
 
-        } else if ("delete".equals(action)) {
-            // Delete order and its items
-            int orderId = Integer.parseInt(request.getParameter("order_id"));
-            boolean success = orderDao.deleteOrder(orderId);
-            session.setAttribute(success ? "successMessage" : "errorMessage",
-                success ? "Order deleted!" : "Failed to delete order.");
-        }
+		} else if ("delete".equals(action)) {
+			// Delete order and its items
+			int orderId = Integer.parseInt(request.getParameter("order_id"));
+			boolean success = orderDao.deleteOrder(orderId);
+			session.setAttribute(success ? "successMessage" : "errorMessage",
+					success ? "Order deleted!" : "Failed to delete order.");
+		}
 
-        response.sendRedirect(request.getContextPath() + "/adminOrders");
+		response.sendRedirect(request.getContextPath() + "/adminOrders");
 	}
 
 }

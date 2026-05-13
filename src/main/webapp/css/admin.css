@@ -266,85 +266,136 @@ thead th[data-col]:hover {
 	z-index: 180;
 }
 
-@media (max-width: 768px) {
+.pagination-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 24px;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.pagination-info {
+	font-size: 13px;
+	color: #aaa;
+}
+
+.pagination-controls {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.page-btn {
+	padding: 8px 16px;
+	border-radius: 50px;
+	border: 1.5px solid #e8e0dc;
+	background: #fff;
+	font-size: 13px;
+	font-weight: 600;
+	color: #2c1a10;
+	text-decoration: none;
+	transition: all 0.2s;
+	white-space: nowrap;
+}
+
+.page-btn:hover {
+	border-color: #c0392b;
+	color: #c0392b;
+}
+
+.page-btn.disabled {
+	color: #ccc;
+	border-color: #f0ebe8;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
+.page-numbers {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.page-num {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 13px;
+	font-weight: 600;
+	color: #2c1a10;
+	text-decoration: none;
+	border: 1.5px solid #e8e0dc;
+	background: #fff;
+	transition: all 0.2s;
+}
+
+.page-num:hover {
+	border-color: #c0392b;
+	color: #c0392b;
+}
+
+.page-num.active {
+	background: linear-gradient(135deg, #c0392b, #e05a3a);
+	color: #fff;
+	border-color: transparent;
+}
+
+@media ( max-width : 768px) {
 	body {
 		display: block !important;
 		overflow-x: hidden;
 	}
-
 	body.admin-sidebar-open {
 		overflow: hidden;
 	}
-
 	.admin-menu-toggle {
 		display: inline-flex !important;
 	}
-
 	.admin-sidebar {
 		transform: translateX(-100%);
 		transition: transform 0.25s ease;
 		z-index: 200 !important;
 		box-shadow: 12px 0 30px rgba(0, 0, 0, 0.28);
 	}
-
 	.admin-sidebar.open {
 		transform: translateX(0);
 	}
-
 	.admin-sidebar-backdrop.show {
 		display: block;
 	}
-
 	.admin-main {
 		margin-left: 0 !important;
 		width: 100% !important;
 		padding: 76px 18px 28px !important;
 	}
-
 	.admin-topbar {
 		flex-direction: column !important;
 		align-items: stretch !important;
 		gap: 14px !important;
 		margin-bottom: 24px !important;
 	}
-
 	.topbar-left h1 {
 		font-size: 22px !important;
 		letter-spacing: 0 !important;
 	}
-
-	.stats-grid,
-	.two-col,
-	.quick-actions {
+	.stats-grid, .two-col, .quick-actions {
 		grid-template-columns: 1fr !important;
 	}
-
-	.filter-toolbar,
-	.action-btns,
-	.form-row,
-	.status-form,
-	.delete-btns,
-	.modal-header,
-	.section-heading {
+	.filter-toolbar, .action-btns, .form-row, .status-form, .delete-btns,
+		.modal-header, .section-heading {
 		flex-direction: column !important;
 		align-items: stretch !important;
 	}
-
-	.filter-input,
-	.filter-select,
-	.btn-clear-date,
-	.btn-add,
-	.btn-update,
-	.btn-delete,
-	.btn-edit,
-	.btn-submit,
-	.btn-confirm-delete,
-	.btn-cancel,
-	.status-select {
+	.filter-input, .filter-select, .btn-clear-date, .btn-add, .btn-update,
+		.btn-delete, .btn-edit, .btn-submit, .btn-confirm-delete, .btn-cancel,
+		.status-select {
 		width: 100% !important;
 		min-width: 0 !important;
 	}
-
 	.table-card {
 		width: 100% !important;
 		overflow-x: auto !important;
@@ -352,14 +403,10 @@ thead th[data-col]:hover {
 		padding: 16px !important;
 		border-radius: 12px !important;
 	}
-
-	.table-card table,
-	table {
+	.table-card table, table {
 		min-width: 720px;
 	}
-
-	.modal,
-	.delete-modal {
+	.modal, .delete-modal {
 		width: calc(100% - 32px) !important;
 		max-width: none !important;
 		max-height: 90vh !important;

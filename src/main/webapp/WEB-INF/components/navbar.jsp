@@ -18,14 +18,14 @@ Object loggedInUser = session.getAttribute("user");
 	<ul class="nav-links" id="primaryNav">
 		<li><a href="${pageContext.request.contextPath}/index"
 			class="${activePage == 'home' ? 'active' : ''}">Home</a></li>
+		<li><a href="${pageContext.request.contextPath}/about-us"
+			class="${activePage == 'about' ? 'active' : ''}">About Us</a></li>
 		<%
 		if (loggedInUser != null) {
 		%>
 		<%-- Logged in — show these links --%>
 		<li><a href="${pageContext.request.contextPath}/restaurants"
 			class="${activePage == 'restaurants' ? 'active' : ''}">Restaurants</a></li>
-		<li><a href="${pageContext.request.contextPath}/about-us"
-			class="${activePage == 'about' ? 'active' : ''}">About Us</a></li>
 		<li><a href="${pageContext.request.contextPath}/logout">Logout</a></li>
 		<li></li>
 		<%
