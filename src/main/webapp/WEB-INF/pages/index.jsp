@@ -512,7 +512,7 @@
 	        {
 	            name:  "<%= city.getCityName() %>",
 	            count: "<%= city.getRestaurantCount() %>" + " Restaurants",
-	            value: "<%= city.getCityValue() %>",
+	            value: "<%= city.getCityId() %>",
 	            image: "<%= city.getImageUrl() %>"
 	        }<%= i < cities.size() - 1 ? "," : "" %>
 	        <%
